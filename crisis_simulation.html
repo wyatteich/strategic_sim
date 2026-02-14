@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>STRATEGIC CRISIS SIMULATION</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         * {
             margin: 0;
@@ -595,6 +597,132 @@
             font-family: 'Courier New', monospace;
             font-size: 12px;
         }
+        
+        .wireframe-map-container {
+            margin: 20px 0;
+            padding: 0;
+            border: 2px solid #4a9eff;
+            background: #000;
+            position: relative;
+            height: 500px;
+            z-index: 1;
+        }
+        
+        .wireframe-canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+        
+        #wireframe-map {
+            width: 100%;
+            height: 100%;
+            background: #000;
+        }
+        
+        /* Override Leaflet defaults for dark theme */
+        .leaflet-container {
+            background: #000;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .leaflet-popup-content-wrapper {
+            background: rgba(0, 26, 51, 0.95);
+            color: #ffb000;
+            border: 1px solid #4a9eff;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+        }
+        
+        .leaflet-popup-tip {
+            background: rgba(0, 26, 51, 0.95);
+        }
+        
+        .leaflet-control-zoom a {
+            background: rgba(26, 38, 51, 0.9);
+            color: #4a9eff;
+            border: 1px solid #4a9eff;
+        }
+        
+        .leaflet-control-zoom a:hover {
+            background: rgba(42, 64, 102, 0.9);
+            color: #ffb000;
+        }
+        
+        .leaflet-bar {
+            border: 1px solid #4a9eff;
+        }
+        
+        .map-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 5px;
+            z-index: 10;
+        }
+        
+        .map-btn {
+            padding: 5px 10px;
+            background: rgba(26, 38, 51, 0.8);
+            border: 1px solid #4a9eff;
+            color: #ffb000;
+            font-family: 'Courier New', monospace;
+            font-size: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .map-btn:hover {
+            background: rgba(42, 64, 102, 0.9);
+            box-shadow: 0 0 5px #4a9eff;
+        }
+        
+        .map-btn.active {
+            background: rgba(42, 64, 102, 0.9);
+            border-color: #ffb000;
+        }
+        
+        .map-info {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background: rgba(0, 10, 20, 0.9);
+            border: 1px solid #4a9eff;
+            padding: 10px;
+            font-size: 10px;
+            color: #ffb000;
+            max-width: 250px;
+            display: none;
+        }
+        
+        .map-info.show {
+            display: block;
+        }
+        
+        .map-legend {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 10, 20, 0.9);
+            border: 1px solid #4a9eff;
+            padding: 8px;
+            font-size: 9px;
+            color: #ffb000;
+        }
+        
+        .legend-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+        
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border: 1px solid #4a9eff;
+        }
     </style>
 </head>
 <body>
@@ -616,15 +744,32 @@
                     Initializing scenario parameters...
                 </div>
                 
-                <div class="map-container">
-                    <div class="panel-title">GLOBAL SITUATION MAP</div>
-                    <div class="map-grid" id="map-grid"></div>
-                    <div style="margin-top: 15px; font-size: 11px;">
-                        <span style="color: #00ff00;">█ ALLIED</span>
-                        <span style="color: #ff6600; margin-left: 15px;">█ HOSTILE</span>
-                        <span style="color: #888888; margin-left: 15px;">█ NEUTRAL</span>
-                        <span style="color: #ffff00; margin-left: 15px;">█ CONTESTED</span>
+                <div class="wireframe-map-container">
+                    <div class="map-legend">
+                        <div class="legend-row">
+                            <div class="legend-color" style="background: #4a9eff;"></div>
+                            <span>Allied Forces</span>
+                        </div>
+                        <div class="legend-row">
+                            <div class="legend-color" style="background: #ff6600;"></div>
+                            <span>Hostile Forces</span>
+                        </div>
+                        <div class="legend-row">
+                            <div class="legend-color" style="background: #ff0000;"></div>
+                            <span>Active Threat</span>
+                        </div>
+                        <div class="legend-row">
+                            <div class="legend-color" style="background: #ffb000;"></div>
+                            <span>Force Movement</span>
+                        </div>
                     </div>
+                    <div class="map-controls">
+                        <button class="map-btn active" id="map-world">WORLD</button>
+                        <button class="map-btn" id="map-pacific">PACIFIC</button>
+                        <button class="map-btn" id="map-arctic">ARCTIC</button>
+                        <button class="map-btn" id="map-europe">EUROPE</button>
+                    </div>
+                    <div id="wireframe-map"></div>
                 </div>
                 
                 <div class="options" id="options-container">
@@ -753,6 +898,121 @@
                 currentSlide: 0,
                 totalSlides: 0,
                 slides: []
+            },
+            map: {
+                view: 'world',
+                zoom: 1,
+                centerX: 0,
+                centerY: 0,
+                threats: [],
+                forces: [],
+                movements: []
+            }
+        };
+        
+        // World map data - simplified wireframe coordinates
+        const worldMapData = {
+            continents: [
+                // North America
+                { 
+                    name: 'North America',
+                    points: [
+                        [120, 80], [140, 70], [160, 65], [180, 70], [190, 85],
+                        [185, 100], [170, 120], [150, 130], [130, 125], [115, 110],
+                        [110, 90], [120, 80]
+                    ]
+                },
+                // Europe
+                {
+                    name: 'Europe',
+                    points: [
+                        [280, 75], [295, 70], [310, 75], [315, 85], [310, 95],
+                        [300, 100], [285, 95], [280, 85], [280, 75]
+                    ]
+                },
+                // Asia
+                {
+                    name: 'Asia',
+                    points: [
+                        [320, 60], [380, 55], [420, 60], [440, 70], [450, 85],
+                        [445, 105], [430, 120], [410, 125], [390, 120], [370, 110],
+                        [350, 100], [330, 90], [320, 75], [320, 60]
+                    ]
+                },
+                // Africa
+                {
+                    name: 'Africa',
+                    points: [
+                        [285, 110], [295, 105], [310, 110], [315, 130], [310, 155],
+                        [295, 165], [280, 160], [275, 140], [280, 120], [285, 110]
+                    ]
+                },
+                // South America
+                {
+                    name: 'South America',
+                    points: [
+                        [165, 145], [175, 140], [185, 145], [190, 165], [185, 190],
+                        [175, 200], [165, 195], [160, 175], [165, 155], [165, 145]
+                    ]
+                },
+                // Australia
+                {
+                    name: 'Australia',
+                    points: [
+                        [430, 165], [455, 160], [470, 170], [465, 185], [445, 190],
+                        [430, 180], [430, 165]
+                    ]
+                }
+            ],
+            strategicLocations: [
+                // US & Allies
+                { name: 'Washington DC', x: 155, y: 95, type: 'capital', faction: 'allied' },
+                { name: 'Pearl Harbor', x: 80, y: 120, type: 'naval_base', faction: 'allied' },
+                { name: 'Guam', x: 440, y: 125, type: 'naval_base', faction: 'allied' },
+                { name: 'Tokyo', x: 460, y: 95, type: 'capital', faction: 'allied' },
+                { name: 'Seoul', x: 450, y: 100, type: 'capital', faction: 'allied' },
+                { name: 'London', x: 285, y: 82, type: 'capital', faction: 'allied' },
+                { name: 'Brussels', x: 292, y: 85, type: 'capital', faction: 'allied' },
+                
+                // Adversaries
+                { name: 'Beijing', x: 420, y: 100, type: 'capital', faction: 'hostile' },
+                { name: 'Moscow', x: 340, y: 70, type: 'capital', faction: 'hostile' },
+                { name: 'Tehran', x: 330, y: 100, type: 'capital', faction: 'hostile' },
+                
+                // Flashpoints
+                { name: 'Taiwan', x: 430, y: 110, type: 'flashpoint', faction: 'contested' },
+                { name: 'Ukraine', x: 315, y: 82, type: 'flashpoint', faction: 'contested' },
+                { name: 'South China Sea', x: 425, y: 125, type: 'flashpoint', faction: 'contested' },
+                { name: 'Arctic', x: 200, y: 30, type: 'flashpoint', faction: 'contested' },
+                { name: 'Strait of Hormuz', x: 340, y: 110, type: 'flashpoint', faction: 'contested' }
+            ],
+            routes: [
+                // Major shipping lanes
+                { from: [80, 120], to: [440, 125], type: 'shipping', name: 'Trans-Pacific' },
+                { from: [155, 95], to: [285, 82], type: 'shipping', name: 'Trans-Atlantic' },
+                { from: [340, 110], to: [285, 110], type: 'shipping', name: 'Oil Route' }
+            ]
+        };
+        
+        // Regional zoom views
+        const regionalViews = {
+            pacific: {
+                centerX: 400,
+                centerY: 110,
+                zoom: 2,
+                locations: ['Tokyo', 'Beijing', 'Seoul', 'Taiwan', 'Guam', 'Pearl Harbor', 'South China Sea']
+            },
+            arctic: {
+                centerX: 250,
+                centerY: 50,
+                zoom: 2.5,
+                locations: ['Arctic', 'Moscow', 'Washington DC', 'London']
+            },
+            europe: {
+                centerX: 310,
+                centerY: 85,
+                zoom: 2.5,
+                locations: ['London', 'Brussels', 'Moscow', 'Ukraine', 'Tehran']
             }
         };
         
@@ -1478,15 +1738,14 @@
             updateTime();
             setInterval(updateTime, 1000);
             
-            // Initialize map
-            const mapGrid = document.getElementById('map-grid');
-            regions.forEach(region => {
-                const div = document.createElement('div');
-                div.className = `region ${region.status}`;
-                div.textContent = region.name;
-                div.id = `region-${region.id}`;
-                mapGrid.appendChild(div);
-                gameState.regions[region.id] = region.status;
+            // Wait for Leaflet to load before initializing map
+            waitForLeaflet().then(() => {
+                initLeafletMap();
+            }).catch((error) => {
+                console.error('Failed to load Leaflet:', error);
+                // Fallback: show error message
+                document.getElementById('wireframe-map').innerHTML = 
+                    '<div style="color: #ff0000; padding: 20px; text-align: center;">MAP UNAVAILABLE: External map library failed to load. Check internet connection or firewall settings.</div>';
             });
             
             // Initialize advisor system
@@ -1494,6 +1753,337 @@
             
             // Start with random scenario
             startScenario(scenarios[Math.floor(Math.random() * scenarios.length)]);
+        }
+        
+        // Wait for Leaflet library to load
+        function waitForLeaflet() {
+            return new Promise((resolve, reject) => {
+                let attempts = 0;
+                const maxAttempts = 50; // 5 seconds max wait
+                
+                const checkLeaflet = () => {
+                    if (typeof L !== 'undefined') {
+                        console.log('Leaflet loaded successfully');
+                        resolve();
+                    } else if (attempts >= maxAttempts) {
+                        reject(new Error('Leaflet failed to load after 5 seconds'));
+                    } else {
+                        attempts++;
+                        setTimeout(checkLeaflet, 100);
+                    }
+                };
+                
+                checkLeaflet();
+            });
+        }
+        
+        // Leaflet Map System
+        let leafletMap;
+        let mapMarkers = [];
+        let mapLayers = {
+            threats: L.layerGroup(),
+            forces: L.layerGroup(),
+            movements: L.layerGroup()
+        };
+        
+        // Custom pulsing icon for threats
+        const pulsingIcon = L.divIcon({
+            className: 'pulsing-threat',
+            html: '<div style="width: 20px; height: 20px; background: #ff0000; border-radius: 50%; animation: pulse 2s infinite; box-shadow: 0 0 10px #ff0000;"></div>',
+            iconSize: [20, 20]
+        });
+        
+        function initLeafletMap() {
+            // Check if Leaflet loaded
+            if (typeof L === 'undefined') {
+                console.error('Leaflet failed to load. Check CDN connection.');
+                document.getElementById('wireframe-map').innerHTML = 
+                    '<div style="color: #ff0000; padding: 20px; text-align: center;">MAP ERROR: Leaflet library failed to load. Check internet connection.</div>';
+                return;
+            }
+            
+            try {
+                // Initialize map
+                leafletMap = L.map('wireframe-map', {
+                    center: [30, 0],
+                    zoom: 2,
+                    minZoom: 2,
+                    maxZoom: 6,
+                    zoomControl: true,
+                    attributionControl: false
+                });
+                
+                // Add dark tile layer with minimal styling
+                L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
+                    subdomains: 'abcd',
+                    maxZoom: 19
+                }).addTo(leafletMap);
+                
+                // Add wireframe overlay layer
+                addWireframeOverlay();
+                
+                // Add layer groups
+                mapLayers.threats.addTo(leafletMap);
+                mapLayers.forces.addTo(leafletMap);
+                mapLayers.movements.addTo(leafletMap);
+                
+                // Add strategic locations
+                addStrategicLocations();
+                
+                // Map controls
+                document.getElementById('map-world').addEventListener('click', () => setLeafletView('world'));
+                document.getElementById('map-pacific').addEventListener('click', () => setLeafletView('pacific'));
+                document.getElementById('map-arctic').addEventListener('click', () => setLeafletView('arctic'));
+                document.getElementById('map-europe').addEventListener('click', () => setLeafletView('europe'));
+                
+                // Add CSS for pulsing animation
+                if (!document.getElementById('map-animations')) {
+                    const style = document.createElement('style');
+                    style.id = 'map-animations';
+                    style.textContent = `
+                        @keyframes pulse {
+                            0%, 100% { transform: scale(1); opacity: 0.8; }
+                            50% { transform: scale(1.5); opacity: 0.3; }
+                        }
+                        .threat-circle {
+                            animation: pulse 2s infinite;
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+                
+                console.log('Leaflet map initialized successfully');
+            } catch (error) {
+                console.error('Error initializing Leaflet map:', error);
+                document.getElementById('wireframe-map').innerHTML = 
+                    '<div style="color: #ff0000; padding: 20px; text-align: center;">MAP ERROR: ' + error.message + '</div>';
+            }
+        }
+        
+        function addWireframeOverlay() {
+            // Add grid lines overlay
+            const gridLayer = L.layerGroup();
+            
+            // Latitude lines
+            for (let lat = -80; lat <= 80; lat += 20) {
+                const line = L.polyline([
+                    [lat, -180],
+                    [lat, 180]
+                ], {
+                    color: '#4a9eff',
+                    weight: 0.5,
+                    opacity: 0.2,
+                    interactive: false
+                });
+                gridLayer.addLayer(line);
+            }
+            
+            // Longitude lines
+            for (let lng = -180; lng <= 180; lng += 20) {
+                const line = L.polyline([
+                    [-80, lng],
+                    [80, lng]
+                ], {
+                    color: '#4a9eff',
+                    weight: 0.5,
+                    opacity: 0.2,
+                    interactive: false
+                });
+                gridLayer.addLayer(line);
+            }
+            
+            gridLayer.addTo(leafletMap);
+        }
+        
+        function addStrategicLocations() {
+            const locations = [
+                // US & Allies
+                { name: 'Washington DC', lat: 38.9, lng: -77.0, type: 'capital', faction: 'allied' },
+                { name: 'Pearl Harbor', lat: 21.3, lng: -157.8, type: 'naval_base', faction: 'allied' },
+                { name: 'Guam', lat: 13.4, lng: 144.7, type: 'naval_base', faction: 'allied' },
+                { name: 'Tokyo', lat: 35.6, lng: 139.7, type: 'capital', faction: 'allied' },
+                { name: 'Seoul', lat: 37.5, lng: 127.0, type: 'capital', faction: 'allied' },
+                { name: 'London', lat: 51.5, lng: -0.1, type: 'capital', faction: 'allied' },
+                { name: 'Brussels', lat: 50.8, lng: 4.3, type: 'capital', faction: 'allied' },
+                
+                // Adversaries
+                { name: 'Beijing', lat: 39.9, lng: 116.4, type: 'capital', faction: 'hostile' },
+                { name: 'Moscow', lat: 55.7, lng: 37.6, type: 'capital', faction: 'hostile' },
+                { name: 'Tehran', lat: 35.6, lng: 51.4, type: 'capital', faction: 'hostile' },
+                
+                // Flashpoints
+                { name: 'Taiwan', lat: 25.0, lng: 121.5, type: 'flashpoint', faction: 'contested' },
+                { name: 'Ukraine', lat: 50.4, lng: 30.5, type: 'flashpoint', faction: 'contested' },
+                { name: 'South China Sea', lat: 12.0, lng: 114.0, type: 'flashpoint', faction: 'contested' },
+                { name: 'Arctic', lat: 75.0, lng: 0.0, type: 'flashpoint', faction: 'contested' },
+                { name: 'Strait of Hormuz', lat: 26.5, lng: 56.2, type: 'flashpoint', faction: 'contested' }
+            ];
+            
+            locations.forEach(loc => {
+                let color, iconHtml, iconSize;
+                
+                if (loc.faction === 'allied') color = '#4a9eff';
+                else if (loc.faction === 'hostile') color = '#ff6600';
+                else if (loc.faction === 'contested') color = '#ffb000';
+                else color = '#888888';
+                
+                if (loc.type === 'capital') {
+                    // Square for capitals
+                    iconHtml = `<div style="width: 8px; height: 8px; background: ${color}; border: 2px solid ${color};"></div>`;
+                    iconSize = [12, 12];
+                } else if (loc.type === 'naval_base') {
+                    // Triangle for bases
+                    iconHtml = `<div style="width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 10px solid ${color};"></div>`;
+                    iconSize = [12, 10];
+                } else if (loc.type === 'flashpoint') {
+                    // Pulsing circle for flashpoints
+                    iconHtml = `<div class="threat-circle" style="width: 12px; height: 12px; background: ${color}; border-radius: 50%; border: 2px solid #ff0000; box-shadow: 0 0 10px #ff0000;"></div>`;
+                    iconSize = [16, 16];
+                } else {
+                    iconHtml = `<div style="width: 8px; height: 8px; background: ${color}; border-radius: 50%;"></div>`;
+                    iconSize = [8, 8];
+                }
+                
+                const icon = L.divIcon({
+                    className: 'custom-marker',
+                    html: iconHtml,
+                    iconSize: iconSize
+                });
+                
+                const marker = L.marker([loc.lat, loc.lng], { icon: icon })
+                    .bindPopup(`
+                        <strong style="color: ${color};">${loc.name}</strong><br>
+                        Type: ${loc.type.replace('_', ' ').toUpperCase()}<br>
+                        Status: ${loc.faction.toUpperCase()}
+                    `)
+                    .addTo(mapLayers.forces);
+                
+                // Add label for major locations
+                if (loc.type === 'capital' || loc.type === 'flashpoint') {
+                    const label = L.marker([loc.lat, loc.lng], {
+                        icon: L.divIcon({
+                            className: 'location-label',
+                            html: `<div style="color: ${color}; font-size: 9px; white-space: nowrap; margin-left: 10px;">${loc.name}</div>`,
+                            iconSize: [100, 20]
+                        }),
+                        interactive: false
+                    }).addTo(mapLayers.forces);
+                }
+                
+                mapMarkers.push({ marker, data: loc });
+            });
+        }
+        
+        function setLeafletView(view) {
+            // Update active button
+            document.querySelectorAll('.map-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`map-${view}`).classList.add('active');
+            
+            gameState.map.view = view;
+            
+            if (view === 'world') {
+                leafletMap.setView([30, 0], 2);
+            } else if (view === 'pacific') {
+                leafletMap.setView([25, 135], 4);
+            } else if (view === 'arctic') {
+                leafletMap.setView([75, 0], 3);
+            } else if (view === 'europe') {
+                leafletMap.setView([50, 20], 4);
+            }
+        }
+        
+        function addThreat(lat, lng, label) {
+            // Add expanding threat circle
+            const circle = L.circle([lat, lng], {
+                color: '#ff0000',
+                fillColor: '#ff0000',
+                fillOpacity: 0.2,
+                radius: 200000,
+                className: 'threat-circle'
+            }).bindPopup(`<strong style="color: #ff0000;">THREAT: ${label}</strong>`)
+              .addTo(mapLayers.threats);
+            
+            // Add threat marker
+            const marker = L.marker([lat, lng], {
+                icon: L.divIcon({
+                    className: 'threat-marker',
+                    html: `<div style="width: 8px; height: 8px; background: #ff0000; border-radius: 50%; box-shadow: 0 0 15px #ff0000;"></div>`,
+                    iconSize: [8, 8]
+                })
+            }).addTo(mapLayers.threats);
+            
+            // Add label
+            const labelMarker = L.marker([lat, lng], {
+                icon: L.divIcon({
+                    className: 'threat-label',
+                    html: `<div style="color: #ff0000; font-size: 10px; font-weight: bold; white-space: nowrap; margin-left: 15px; text-shadow: 0 0 5px #000;">${label}</div>`,
+                    iconSize: [150, 20]
+                }),
+                interactive: false
+            }).addTo(mapLayers.threats);
+            
+            gameState.map.threats.push({ circle, marker, labelMarker, label });
+        }
+        
+        function addForceMovement(fromLat, fromLng, toLat, toLng, label, color) {
+            color = color || '#ffb000';
+            
+            // Draw movement line
+            const line = L.polyline(
+                [[fromLat, fromLng], [toLat, toLng]],
+                {
+                    color: color,
+                    weight: 3,
+                    opacity: 0.8,
+                    dashArray: '10, 10',
+                    className: 'force-movement-line'
+                }
+            ).addTo(mapLayers.movements);
+            
+            // Add animated marker
+            const movingMarker = L.marker([fromLat, fromLng], {
+                icon: L.divIcon({
+                    className: 'moving-force',
+                    html: `<div style="width: 10px; height: 10px; background: ${color}; border-radius: 50%; box-shadow: 0 0 10px ${color};"></div>`,
+                    iconSize: [10, 10]
+                })
+            }).bindPopup(`<strong style="color: ${color};">${label}</strong><br>En route...`)
+              .addTo(mapLayers.movements);
+            
+            // Animate marker along path
+            animateMarkerAlongPath(movingMarker, fromLat, fromLng, toLat, toLng, 3000);
+            
+            gameState.map.movements.push({ line, marker: movingMarker, label });
+        }
+        
+        function animateMarkerAlongPath(marker, fromLat, fromLng, toLat, toLng, duration) {
+            const startTime = Date.now();
+            
+            function animate() {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                const lat = fromLat + (toLat - fromLat) * progress;
+                const lng = fromLng + (toLng - fromLng) * progress;
+                
+                marker.setLatLng([lat, lng]);
+                
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                }
+            }
+            
+            animate();
+        }
+        
+        function clearMapThreats() {
+            mapLayers.threats.clearLayers();
+            gameState.map.threats = [];
+        }
+        
+        function clearMapMovements() {
+            mapLayers.movements.clearLayers();
+            gameState.map.movements = [];
         }
         
         // Advisor System
@@ -1772,6 +2362,24 @@ Provide a concise, in-character response (2-4 paragraphs max). Be specific to th
             });
             
             addIntel(`New crisis detected: ${scenario.title}`, 'critical');
+            
+            // Initialize map for this scenario
+            initializeMapForScenario(scenario);
+        }
+        
+        function initializeMapForScenario(scenario) {
+            // Clear previous threats and movements
+            clearMapThreats();
+            clearMapMovements();
+            
+            // Set appropriate view for scenario
+            if (scenario.id === 'taiwan_strait') {
+                setTimeout(() => setLeafletView('pacific'), 500);
+            } else if (scenario.id === 'arctic_resources') {
+                setTimeout(() => setLeafletView('arctic'), 500);
+            } else if (scenario.id === 'cyber_attack') {
+                setTimeout(() => setLeafletView('world'), 500);
+            }
         }
         
         function executeOption(option) {
@@ -1791,8 +2399,69 @@ Provide a concise, in-character response (2-4 paragraphs max). Be specific to th
             updateDisplay();
             addIntel(option.intel, gameState.stability < 40 ? 'critical' : 'warning');
             
+            // Update map based on decision
+            updateMapForDecision(option);
+            
             // Check win/loss conditions
             setTimeout(() => checkGameState(option.nextPhase), 1500);
+        }
+        
+        function updateMapForDecision(option) {
+            const scenario = gameState.scenario;
+            
+            if (!scenario) return;
+            
+            // Taiwan Strait Crisis
+            if (scenario.id === 'taiwan_strait') {
+                if (option.text.includes('carrier group')) {
+                    // Show carrier movement from Pearl Harbor to Taiwan
+                    addForceMovement(21.3, -157.8, 25.0, 121.5, 'USS Reagan CSG', '#4a9eff');
+                    addIntel('SIGINT: Carrier Strike Group Reagan departing Pearl Harbor. ETA 36 hours.', 'warning');
+                } else if (option.text.includes('sanctions')) {
+                    // Add economic pressure indicators
+                    addThreat(39.9, 116.4, 'Economic Pressure');
+                } else if (option.text.includes('multilateral')) {
+                    // Show allied coordination
+                    addForceMovement(35.6, 139.7, 25.0, 121.5, 'JSDF Alert', '#4a9eff');
+                    addForceMovement(37.5, 127.0, 25.0, 121.5, 'ROK Support', '#4a9eff');
+                }
+                
+                // Always show PLA activity
+                if (gameState.turn === 1) {
+                    addThreat(25.0, 121.5, 'PLA Exercise');
+                }
+            }
+            
+            // Arctic Crisis
+            if (scenario.id === 'arctic_resources') {
+                if (option.text.includes('forward operating bases')) {
+                    addForceMovement(51.5, -0.1, 75.0, 0.0, 'NATO Arctic Deploy', '#4a9eff');
+                    addIntel('NATO forces deploying to Arctic installations.', 'warning');
+                } else if (option.text.includes('intelligence operations')) {
+                    addThreat(75.0, 0.0, 'ISR Active');
+                }
+                
+                // Show Russian presence
+                if (gameState.turn === 1) {
+                    addThreat(75.0, 0.0, 'Russian Installation');
+                }
+            }
+            
+            // Cyber Attack
+            if (scenario.id === 'cyber_attack') {
+                if (option.text.includes('counter-cyber')) {
+                    addThreat(55.7, 37.6, 'Cyber Ops');
+                    addIntel('Cyber Command executing response operations.', 'critical');
+                } else if (option.text.includes('Article 5')) {
+                    // Show NATO activation
+                    addForceMovement(51.5, -0.1, 38.9, -77.0, 'NATO Alert', '#4a9eff');
+                }
+                
+                // Show attack origin
+                if (gameState.turn === 1) {
+                    addThreat(55.7, 37.6, 'Attack Source');
+                }
+            }
         }
         
         function checkGameState(nextPhase) {
