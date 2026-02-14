@@ -14,7 +14,7 @@
         body {
             font-family: 'Courier New', monospace;
             background: #0a0a0a;
-            color: #00ff00;
+            color: #ffb000;
             padding: 20px;
             line-height: 1.6;
         }
@@ -25,11 +25,11 @@
         }
         
         .header {
-            border: 2px solid #00ff00;
+            border: 2px solid #4a9eff;
             padding: 20px;
             margin-bottom: 20px;
             text-align: center;
-            background: #001100;
+            background: #001a33;
         }
         
         .header h1 {
@@ -52,9 +52,9 @@
         }
         
         .panel {
-            border: 1px solid #00ff00;
+            border: 1px solid #4a9eff;
             padding: 15px;
-            background: #001100;
+            background: #001a33;
         }
         
         .panel-title {
@@ -62,14 +62,14 @@
             font-weight: bold;
             margin-bottom: 15px;
             padding-bottom: 5px;
-            border-bottom: 1px solid #00ff00;
+            border-bottom: 1px solid #4a9eff;
         }
         
         .situation-report {
             margin-bottom: 15px;
             padding: 10px;
-            border-left: 3px solid #ffff00;
-            background: #002200;
+            border-left: 3px solid #ffb000;
+            background: #1a2633;
         }
         
         .crisis-level {
@@ -79,10 +79,10 @@
             font-size: 11px;
         }
         
-        .level-1 { background: #004400; color: #00ff00; }
-        .level-2 { background: #444400; color: #ffff00; }
-        .level-3 { background: #664400; color: #ffaa00; }
-        .level-4 { background: #660000; color: #ff0000; }
+        .level-1 { background: #1a3d5c; color: #4a9eff; }
+        .level-2 { background: #3d3d1a; color: #ffff00; }
+        .level-3 { background: #3d2d1a; color: #ffaa00; }
+        .level-4 { background: #3d1a1a; color: #ff0000; }
         .level-5 { background: #ff0000; color: #ffffff; animation: blink 1s infinite; }
         
         @keyframes blink {
@@ -99,13 +99,13 @@
         
         .stat {
             padding: 8px;
-            background: #002200;
-            border-left: 2px solid #00ff00;
+            background: #1a2633;
+            border-left: 2px solid #4a9eff;
         }
         
         .stat-label {
             font-size: 11px;
-            color: #00aa00;
+            color: #6bb3ff;
         }
         
         .stat-value {
@@ -122,9 +122,9 @@
             width: 100%;
             padding: 12px;
             margin-bottom: 10px;
-            background: #002200;
-            border: 1px solid #00ff00;
-            color: #00ff00;
+            background: #1a2633;
+            border: 1px solid #4a9eff;
+            color: #ffb000;
             font-family: 'Courier New', monospace;
             font-size: 13px;
             cursor: pointer;
@@ -133,9 +133,9 @@
         }
         
         .option-btn:hover {
-            background: #004400;
-            border-color: #00ff00;
-            box-shadow: 0 0 10px #00ff00;
+            background: #2a4066;
+            border-color: #6bb3ff;
+            box-shadow: 0 0 10px #4a9eff;
         }
         
         .option-btn:disabled {
@@ -146,21 +146,21 @@
         .intel-feed {
             height: 300px;
             overflow-y: auto;
-            background: #000500;
+            background: #000a14;
             padding: 10px;
             font-size: 12px;
-            border: 1px solid #00aa00;
+            border: 1px solid #2a5580;
         }
         
         .intel-item {
             margin-bottom: 10px;
             padding: 5px;
-            border-left: 2px solid #00aa00;
+            border-left: 2px solid #4a9eff;
             padding-left: 8px;
         }
         
         .intel-timestamp {
-            color: #00aa00;
+            color: #6bb3ff;
             font-size: 10px;
         }
         
@@ -176,8 +176,8 @@
         .map-container {
             margin: 20px 0;
             padding: 20px;
-            border: 1px solid #00ff00;
-            background: #001100;
+            border: 1px solid #4a9eff;
+            background: #001a33;
             text-align: center;
         }
         
@@ -190,21 +190,21 @@
         
         .region {
             padding: 15px 5px;
-            border: 1px solid #00aa00;
+            border: 1px solid #2a5580;
             font-size: 11px;
             cursor: pointer;
             transition: all 0.2s;
         }
         
         .region:hover {
-            background: #002200;
-            border-color: #00ff00;
+            background: #1a2633;
+            border-color: #4a9eff;
         }
         
-        .region.allied { background: #002200; color: #00ff00; }
-        .region.hostile { background: #220000; color: #ff6600; }
-        .region.neutral { background: #001100; color: #888888; }
-        .region.contested { background: #221100; color: #ffff00; }
+        .region.allied { background: #1a2633; color: #4a9eff; }
+        .region.hostile { background: #331a1a; color: #ff6600; }
+        .region.neutral { background: #0d1a26; color: #888888; }
+        .region.contested { background: #332a1a; color: #ffb000; }
         .region.flashpoint { 
             animation: pulse 2s infinite;
             border-color: #ff0000;
@@ -241,28 +241,28 @@
         .restart-btn {
             margin-top: 20px;
             padding: 10px 30px;
-            background: #002200;
-            border: 1px solid #00ff00;
-            color: #00ff00;
+            background: #1a2633;
+            border: 1px solid #4a9eff;
+            color: #ffb000;
             font-family: 'Courier New', monospace;
             cursor: pointer;
             font-size: 14px;
         }
         
         .restart-btn:hover {
-            background: #004400;
+            background: #2a4066;
         }
         
         .advisor-panel {
             margin-top: 20px;
-            border: 1px solid #00ff00;
-            background: #001100;
+            border: 1px solid #4a9eff;
+            background: #001a33;
         }
         
         .advisor-header {
             padding: 10px 15px;
-            background: #002200;
-            border-bottom: 1px solid #00ff00;
+            background: #1a2633;
+            border-bottom: 1px solid #4a9eff;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -275,73 +275,73 @@
         
         .advisor-tab {
             padding: 5px 12px;
-            background: #001100;
-            border: 1px solid #00aa00;
-            color: #00aa00;
+            background: #001a33;
+            border: 1px solid #2a5580;
+            color: #6bb3ff;
             font-size: 11px;
             cursor: pointer;
             transition: all 0.2s;
         }
         
         .advisor-tab:hover {
-            background: #002200;
-            border-color: #00ff00;
-            color: #00ff00;
+            background: #1a2633;
+            border-color: #4a9eff;
+            color: #4a9eff;
         }
         
         .advisor-tab.active {
-            background: #004400;
-            border-color: #00ff00;
-            color: #00ff00;
+            background: #2a4066;
+            border-color: #4a9eff;
+            color: #ffb000;
         }
         
         .advisor-console {
             height: 250px;
             overflow-y: auto;
             padding: 15px;
-            background: #000500;
+            background: #000a14;
             font-size: 12px;
         }
         
         .advisor-message {
             margin-bottom: 15px;
             padding: 8px;
-            border-left: 2px solid #00aa00;
+            border-left: 2px solid #4a9eff;
             padding-left: 12px;
         }
         
         .advisor-message.user {
-            border-left-color: #ffff00;
-            color: #ffff00;
+            border-left-color: #ffb000;
+            color: #ffb000;
         }
         
         .advisor-message.advisor {
-            border-left-color: #00ff00;
+            border-left-color: #4a9eff;
         }
         
         .advisor-name {
             font-size: 10px;
-            color: #00aa00;
+            color: #6bb3ff;
             margin-bottom: 5px;
             font-weight: bold;
         }
         
         .advisor-message.user .advisor-name {
-            color: #ffff00;
+            color: #ffb000;
         }
         
         .advisor-input-area {
             padding: 15px;
-            border-top: 1px solid #00aa00;
-            background: #001100;
+            border-top: 1px solid #2a5580;
+            background: #001a33;
         }
         
         .advisor-input {
             width: 100%;
             padding: 10px;
-            background: #000500;
-            border: 1px solid #00aa00;
-            color: #00ff00;
+            background: #000a14;
+            border: 1px solid #2a5580;
+            color: #ffb000;
             font-family: 'Courier New', monospace;
             font-size: 12px;
             resize: none;
@@ -349,16 +349,16 @@
         
         .advisor-input:focus {
             outline: none;
-            border-color: #00ff00;
-            box-shadow: 0 0 5px #00ff00;
+            border-color: #4a9eff;
+            box-shadow: 0 0 5px #4a9eff;
         }
         
         .advisor-send-btn {
             margin-top: 8px;
             padding: 8px 20px;
-            background: #002200;
-            border: 1px solid #00ff00;
-            color: #00ff00;
+            background: #1a2633;
+            border: 1px solid #4a9eff;
+            color: #ffb000;
             font-family: 'Courier New', monospace;
             font-size: 12px;
             cursor: pointer;
@@ -366,8 +366,8 @@
         }
         
         .advisor-send-btn:hover {
-            background: #004400;
-            box-shadow: 0 0 8px #00ff00;
+            background: #2a4066;
+            box-shadow: 0 0 8px #4a9eff;
         }
         
         .advisor-send-btn:disabled {
@@ -376,7 +376,7 @@
         }
         
         .typing-indicator {
-            color: #00aa00;
+            color: #6bb3ff;
             font-style: italic;
             font-size: 11px;
             margin-top: 10px;
@@ -409,15 +409,15 @@
             max-width: 1000px;
             height: 80vh;
             background: #0a0a0a;
-            border: 2px solid #00ff00;
+            border: 2px solid #4a9eff;
             display: flex;
             flex-direction: column;
         }
         
         .briefing-header {
             padding: 20px;
-            background: #001100;
-            border-bottom: 2px solid #00ff00;
+            background: #001a33;
+            border-bottom: 2px solid #4a9eff;
             text-align: center;
         }
         
@@ -455,10 +455,10 @@
         
         .slide-title {
             font-size: 18px;
-            color: #ffff00;
+            color: #ffb000;
             margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 1px solid #00aa00;
+            border-bottom: 1px solid #2a5580;
         }
         
         .slide-section {
@@ -467,26 +467,26 @@
         
         .slide-section h3 {
             font-size: 14px;
-            color: #00ff00;
+            color: #4a9eff;
             margin-bottom: 10px;
             text-transform: uppercase;
         }
         
         .slide-text {
             line-height: 1.8;
-            color: #00ff00;
+            color: #ffb000;
         }
         
         .intel-photo {
-            border: 1px solid #00aa00;
+            border: 1px solid #2a5580;
             padding: 10px;
             margin: 15px 0;
-            background: #001100;
+            background: #001a33;
         }
         
         .photo-label {
             font-size: 10px;
-            color: #00aa00;
+            color: #6bb3ff;
             margin-bottom: 8px;
             text-transform: uppercase;
         }
@@ -495,7 +495,7 @@
             font-family: 'Courier New', monospace;
             font-size: 9px;
             line-height: 1;
-            color: #00ff00;
+            color: #4a9eff;
             white-space: pre;
             background: #000;
             padding: 10px;
@@ -511,13 +511,13 @@
         
         .threat-item {
             padding: 10px;
-            border: 1px solid #00aa00;
-            background: #001100;
+            border: 1px solid #2a5580;
+            background: #001a33;
         }
         
         .threat-level {
             font-size: 11px;
-            color: #00aa00;
+            color: #6bb3ff;
             margin-bottom: 5px;
         }
         
@@ -532,8 +532,8 @@
         
         .briefing-footer {
             padding: 15px 20px;
-            background: #001100;
-            border-top: 1px solid #00aa00;
+            background: #001a33;
+            border-top: 1px solid #2a5580;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -546,9 +546,9 @@
         
         .nav-btn {
             padding: 8px 20px;
-            background: #002200;
-            border: 1px solid #00ff00;
-            color: #00ff00;
+            background: #1a2633;
+            border: 1px solid #4a9eff;
+            color: #ffb000;
             font-family: 'Courier New', monospace;
             font-size: 12px;
             cursor: pointer;
@@ -556,8 +556,8 @@
         }
         
         .nav-btn:hover:not(:disabled) {
-            background: #004400;
-            box-shadow: 0 0 8px #00ff00;
+            background: #2a4066;
+            box-shadow: 0 0 8px #4a9eff;
         }
         
         .nav-btn:disabled {
@@ -567,11 +567,11 @@
         
         .slide-counter {
             font-size: 12px;
-            color: #00aa00;
+            color: #6bb3ff;
         }
         
         .tactical-map {
-            border: 2px solid #00ff00;
+            border: 2px solid #4a9eff;
             padding: 15px;
             background: #000;
             margin: 20px 0;
@@ -704,7 +704,7 @@
             <div class="briefing-header">
                 <div class="classified">TOP SECRET // SPECIAL ACCESS REQUIRED</div>
                 <h2 id="briefing-title">CRISIS BRIEFING</h2>
-                <div style="margin-top: 5px; font-size: 11px; color: #00aa00;">NATIONAL SECURITY COUNCIL</div>
+                <div style="margin-top: 5px; font-size: 11px; color: #6bb3ff;">NATIONAL SECURITY COUNCIL</div>
             </div>
             <div class="briefing-content" id="briefing-content">
                 <!-- Slides populated by JavaScript -->
