@@ -1,0 +1,75 @@
+{
+  "id": "arctic_resources",
+  "title": "ARCTIC TERRITORIAL DISPUTE",
+  "description": "Russian forces have established new military installations on disputed Arctic islands. NATO allies express concern. Vast resource deposits at stake. Winter conditions complicate response options.",
+  "briefing": {
+    "slides": [
+      {
+        "title": "SITUATION OVERVIEW",
+        "content": "<div class=\"slide-section\">\n                                    <h3>Current Status</h3>\n                                    <div class=\"slide-text\">\n                                        Russian Northern Fleet has established permanent military presence on Franz Josef Land and \n                                        Severnaya Zemlya archipelagos. Claims extend EEZ boundaries by 850,000 sq km. Installations \n                                        include S-400 SAM systems, airstrip, and deep-water port facilities. Construction ongoing \n                                        despite extreme weather.\n                                    </div>\n                                </div>\n                                <div class=\"threat-matrix\">\n                                    <div class=\"threat-item\">\n                                        <div class=\"threat-level\">ESCALATION RISK</div>\n                                        <div class=\"threat-value threat-medium\">MODERATE</div>\n                                    </div>\n                                    <div class=\"threat-item\">\n                                        <div class=\"threat-level\">TIME SENSITIVITY</div>\n                                        <div class=\"threat-value threat-medium\">WEEKS</div>\n                                    </div>\n                                    <div class=\"threat-item\">\n                                        <div class=\"threat-level\">STRATEGIC VALUE</div>\n                                        <div class=\"threat-value threat-high\">CRITICAL</div>\n                                    </div>\n                                </div>\n                                <div class=\"slide-section\">\n                                    <h3>Key Factors</h3>\n                                    <div class=\"slide-text\">\n                                        • Estimated $35 trillion in oil, gas, and mineral resources<br>\n                                        • New shipping routes: Northern Sea Route reduces Asia-Europe transit by 40%<br>\n                                        • Climate change opening previously inaccessible regions<br>\n                                        • Five competing territorial claims: Russia, Norway, Denmark, Canada, US<br>\n                                        • Winter conditions limit military response options until May thaw\n                                    </div>\n                                </div>"
+      },
+      {
+        "title": "ARCTIC MILITARY SITUATION",
+        "content": "<div class=\"tactical-map\">\n                                    <div class=\"ascii-image\">\n                ARCTIC CIRCLE - CONTESTED TERRITORIES\n                \n            NORWAY      BARENTS         RUSSIA\n              ║           SEA              ║\n              ║    ┌─────────────┐         ║\n         [NATO]════╡ FRANZ JOSEF ╞═════[NORTHERN\n         BASE ║    │   ⚠ █ █ █   │     FLEET]\n              ║    │  DISPUTED   │         ║\n              ║    └─────────────┘         ║\n              ║                            ║\n         SVALBARD        KARA            SEVERNAYA\n         TREATY          SEA            ZEMLYA\n         ZONE      ┌─────────────┐      ⚠ █ █\n           │       │             │    NEW BASE\n           │       │  LOMONOSOV  │         ║\n         [NATO]    │    RIDGE    │    [RUSSIAN]\n         MONITOR   │   (CLAIM)   │    S-400 SAM\n                   └─────────────┘    AIRSTRIP\n                                      DEEPWATER\n                   NORTH POLE         PORT\n                      ★\n                      \n    LEGEND: █ Military Installation  ⚠ Contested Zone\n            ═ Supply Route  ★ Disputed Seabed Claims\n                                    </div>\n                                </div>\n                                <div class=\"slide-section\">\n                                    <h3>Force Assessment</h3>\n                                    <div class=\"slide-text\">\n                                        <strong>Russian Northern Fleet:</strong> 4 bases, 8 icebreakers, submarine presence<br>\n                                        <strong>NATO Forces:</strong> Norwegian Coast Guard, US patrols limited<br>\n                                        <strong>Chinese Interest:</strong> \"Near-Arctic State\" claims, research stations<br>\n                                        <strong>Environmental:</strong> Temperatures -40°C, 24hr darkness, ice navigation hazardous\n                                    </div>\n                                </div>"
+      },
+      {
+        "title": "STRATEGIC ASSESSMENT",
+        "content": "<div class=\"intel-photo\">\n                                    <div class=\"photo-label\">SYNTHETIC APERTURE RADAR // CLASSIFIED</div>\n                                    <div class=\"ascii-image\">\n╔════════════════════════════════════════════════════════════════╗\n║  FRANZ JOSEF LAND - RUSSIAN BASE CONSTRUCTION                  ║\n║  SENSOR: SENTINEL-2C SAR / DATE: 2026-02-11                   ║\n╠════════════════════════════════════════════════════════════════╣\n║                                                                ║\n║  ▓▓▓▓▓▓▓▓▓▓▓▓ ICE SHEET                                       ║\n║  ▓░░░░░░░░░▓                                                   ║\n║  ▓░┌─────┐░▓  ← AIRSTRIP (2400m)                             ║\n║  ▓░│█████│░▓                                                   ║\n║  ▓░└─────┘░▓  ← S-400 BATTERY                                ║\n║  ▓░  ╔╗╔╗ ░▓                                                   ║\n║  ▓░  ╚╝╚╝ ░▓  ← SAM RADARS (4x)                              ║\n║  ▓░≈≈≈≈≈≈≈░▓                                                   ║\n║  ▓░HARBOR ░▓  ← DEEP WATER PORT                               ║\n║  ▓▓▓▓▓▓▓▓▓▓▓                                                   ║\n║                                                                ║\n║  ANALYSIS: Construction 73% complete. Year-round operations   ║\n║  capability by April 2026. Covers 450nm radius of Arctic.     ║\n║                                                                ║\n╚════════════════════════════════════════════════════════════════╝</div>\n                                </div>\n                                <div class=\"slide-section\">\n                                    <h3>Legal Framework</h3>\n                                    <div class=\"slide-text\">\n                                        UN Convention on Law of the Sea (UNCLOS) governs territorial claims. Russia submitted \n                                        continental shelf extension claim in 2015. Denmark, Canada counter-claims overlap. \n                                        US not UNCLOS signatory - legal standing ambiguous. International Tribunal for Law \n                                        of Sea has jurisdiction but enforcement mechanisms weak.\n                                    </div>\n                                </div>"
+      },
+      {
+        "title": "ECONOMIC & ALLIANCE IMPLICATIONS",
+        "content": "<div class=\"slide-section\">\n                                    <h3>Resource Competition</h3>\n                                    <div class=\"slide-text\">\n                                        Control of Lomonosov Ridge seabed grants rights to estimated 13% of undiscovered global oil, \n                                        30% of undiscovered natural gas. Rare earth minerals critical for defense industry. \n                                        Northern Sea Route transit fees: potential $100B annually. Energy independence implications \n                                        for Europe. Russia currently holds dominant position.\n                                    </div>\n                                </div>\n                                <div class=\"slide-section\">\n                                    <h3>NATO Cohesion</h3>\n                                    <div class=\"slide-text\">\n                                        Norway invoked Article 4 consultations. Canada demands stronger response. Denmark requests \n                                        NATO presence in Greenland. US Arctic strategy under review. Concerns about setting \n                                        precedent for territorial claims. Nordic countries vulnerable to Russian energy coercion. \n                                        Winter limits military options - must act before spring thaw enables Russian reinforcement.\n                                    </div>\n                                </div>\n                                <div class=\"slide-section\">\n                                    <h3>Chinese Dimension</h3>\n                                    <div class=\"slide-text\">\n                                        Beijing declared itself \"near-Arctic state\" despite being 3000km south of Arctic Circle. \n                                        Research stations in Iceland, Norway. \"Polar Silk Road\" initiative coordinates with Russian \n                                        claims. Joint exercises planned. Potential Sino-Russian Arctic bloc threatens NATO interests.\n                                    </div>\n                                </div>"
+      },
+      {
+        "title": "RESPONSE OPTIONS ANALYSIS",
+        "content": "<div class=\"slide-section\">\n                                    <h3>Time Factors</h3>\n                                    <div class=\"slide-text\">\n                                        <strong style=\"color: #ffff00;\">IMMEDIATE (0-4 weeks):</strong> Winter conditions limit operations. \n                                        Diplomatic action feasible. Legal filings possible.<br><br>\n                                        <strong style=\"color: #ffaa00;\">NEAR-TERM (1-3 months):</strong> Spring thaw enables reinforcement. \n                                        Military options viable but escalatory.<br><br>\n                                        <strong style=\"color: #ff6600;\">LONG-TERM (3+ months):</strong> Installations become permanent. \n                                        Fait accompli difficult to reverse. Precedent set for future territorial grabs.\n                                    </div>\n                                </div>\n                                <div class=\"slide-section\">\n                                    <h3>Recommended Strategy</h3>\n                                    <div class=\"slide-text\">\n                                        Multi-track approach combining legal, diplomatic, and military elements. Avoid direct \n                                        confrontation in winter months. Build coalition consensus. Prepare forward operating \n                                        capability in allied Arctic territory. File comprehensive legal challenge. Consider \n                                        resource-sharing framework to de-escalate competition. Key: prevent Chinese involvement \n                                        while maintaining NATO unity.\n                                    </div>\n                                </div>"
+      }
+    ]
+  },
+  "options": [
+    {
+      "text": "File international tribunal challenge",
+      "effects": {
+        "stability": 5,
+        "diplomacy": 15,
+        "support": 5,
+        "military": -10
+      },
+      "intel": "Legal proceedings initiated. Process will take months. Russia dismisses tribunal authority.",
+      "nextPhase": "legal"
+    },
+    {
+      "text": "Establish forward operating bases in allied Arctic territory",
+      "effects": {
+        "stability": -5,
+        "military": 10,
+        "allies": 10,
+        "diplomacy": -5
+      },
+      "intel": "Bases activated in Norway, Canada. Russian response includes bomber patrols.",
+      "nextPhase": "militarization"
+    },
+    {
+      "text": "Propose Arctic resource-sharing framework",
+      "effects": {
+        "stability": 10,
+        "diplomacy": 10,
+        "support": -10,
+        "allies": -5
+      },
+      "intel": "Framework proposal circulated. Mixed reception. China expresses interest as \"stakeholder.\"",
+      "nextPhase": "framework"
+    },
+    {
+      "text": "Launch covert intelligence operations in disputed zones",
+      "effects": {
+        "stability": -10,
+        "intelligence": 15,
+        "diplomacy": -15,
+        "military": 5
+      },
+      "intel": "Reconnaissance assets deployed. Signals intelligence gathering enhanced.",
+      "nextPhase": "covert"
+    }
+  ]
+}

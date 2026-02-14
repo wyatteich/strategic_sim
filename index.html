@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STRATEGIC CRISIS SIMULATION</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"
+          integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+          crossorigin=""/>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"
+            integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+            crossorigin=""></script>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>STRATEGIC CRISIS SIMULATION</h1>
+            <div class="classified">CLASSIFIED - EYES ONLY - ADVISOR CLEARANCE REQUIRED</div>
+            <div style="margin-top: 10px; font-size: 12px;" id="current-time"></div>
+        </div>
+
+        <!-- Metrics Ribbon -->
+        <div class="metrics-ribbon">
+            <div class="metric-item">
+                <div class="metric-label">Stability</div>
+                <div class="metric-value" id="stability">85</div>
+                <div class="metric-bar"><div class="metric-bar-fill" id="stability-bar" style="width: 85%;"></div></div>
+            </div>
+            <div class="metric-item">
+                <div class="metric-label">Diplomacy</div>
+                <div class="metric-value" id="diplomacy">75</div>
+                <div class="metric-bar"><div class="metric-bar-fill" id="diplomacy-bar" style="width: 75%;"></div></div>
+            </div>
+            <div class="metric-item">
+                <div class="metric-label">Military</div>
+                <div class="metric-value" id="military">70</div>
+                <div class="metric-bar"><div class="metric-bar-fill" id="military-bar" style="width: 70%;"></div></div>
+            </div>
+            <div class="metric-item">
+                <div class="metric-label">Support</div>
+                <div class="metric-value" id="support">80</div>
+                <div class="metric-bar"><div class="metric-bar-fill" id="support-bar" style="width: 80%;"></div></div>
+            </div>
+            <div class="metric-item">
+                <div class="metric-label">Allies</div>
+                <div class="metric-value" id="allies">75</div>
+                <div class="metric-bar"><div class="metric-bar-fill" id="allies-bar" style="width: 75%;"></div></div>
+            </div>
+            <div class="metric-item">
+                <div class="metric-label">Intel</div>
+                <div class="metric-value" id="intelligence">65</div>
+                <div class="metric-bar"><div class="metric-bar-fill" id="intelligence-bar" style="width: 65%;"></div></div>
+            </div>
+            <div class="defcon-indicator">
+                <span class="crisis-level" id="crisis-level">DEFCON 5</span>
+            </div>
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="tab-navigation">
+            <button class="tab-btn active" data-tab="situation">SITUATION</button>
+            <button class="tab-btn" data-tab="map">MAP</button>
+            <button class="tab-btn" data-tab="advisors">ADVISORS</button>
+            <button class="tab-btn" data-tab="intel">INTEL FEED</button>
+        </div>
+
+        <!-- Situation Tab -->
+        <div class="tab-content active" id="tab-situation">
+            <div class="content-area">
+                <div class="situation-report" id="situation-text">
+                    Initializing scenario parameters...
+                </div>
+
+                <div class="command-interface" id="command-interface" style="display: none; margin-top: 20px;">
+                    <div class="panel-title">COMMAND INPUT</div>
+                    <div style="margin-bottom: 10px; font-size: 11px; color: #6bb3ff;">
+                        Issue orders in natural language. Be specific about actions, targets, and timing.
+                    </div>
+                    <textarea id="player-command" class="command-input" rows="4" placeholder="Enter your orders...
+
+Examples:
+• Deploy the Reagan carrier group to 100nm east of Taiwan, maintain DEFCON 3
+• Initiate backchannel negotiations with Beijing through Singapore embassy
+• Request emergency NATO Article 4 consultation within 24 hours
+• Position B-2 bombers in Guam as deterrent, coordinate with PACOM"></textarea>
+                    <div style="margin-top: 10px; display: flex; gap: 10px;">
+                        <button class="option-btn" id="submit-command" style="flex: 1;">SUBMIT ORDERS</button>
+                        <button class="option-btn" id="show-suggested-options" style="flex: 1;">SUGGEST OPTIONS</button>
+                    </div>
+                    <div id="processing-indicator" style="display: none; margin-top: 10px; color: #ffb000; font-size: 11px; text-align: center;">
+                        <div>⟳ PROCESSING ORDERS...</div>
+                        <div style="font-size: 10px; color: #6bb3ff; margin-top: 5px;">Analyzing feasibility and consequences...</div>
+                    </div>
+                </div>
+
+                <div class="order-review-panel" id="order-review" style="display: none; margin-top: 20px;">
+                    <div class="panel-title">ORDER CONFIRMATION</div>
+                    <div id="order-details"></div>
+                    <div style="margin-top: 15px; display: flex; gap: 10px;">
+                        <button class="option-btn" id="approve-orders" style="flex: 1;">APPROVE & EXECUTE</button>
+                        <button class="option-btn" id="modify-orders" style="flex: 1;">MODIFY</button>
+                        <button class="option-btn" id="cancel-orders" style="flex: 1;">CANCEL</button>
+                    </div>
+                </div>
+
+                <div class="options" id="options-container">
+                </div>
+            </div>
+        </div>
+
+        <!-- Map Tab -->
+        <div class="tab-content" id="tab-map">
+            <div class="content-area" style="padding: 0;">
+                <div class="wireframe-map-container" style="margin: 0; height: 100%; border: none;">
+                    <div class="map-legend">
+                        <div class="legend-row">
+                            <div class="legend-color" style="background: #4a9eff;"></div>
+                            <span>Allied Forces</span>
+                        </div>
+                        <div class="legend-row">
+                            <div class="legend-color" style="background: #ff6600;"></div>
+                            <span>Hostile Forces</span>
+                        </div>
+                        <div class="legend-row">
+                            <div class="legend-color" style="background: #ff0000;"></div>
+                            <span>Active Threat</span>
+                        </div>
+                        <div class="legend-row">
+                            <div class="legend-color" style="background: #ffb000;"></div>
+                            <span>Force Movement</span>
+                        </div>
+                    </div>
+                    <div class="map-controls">
+                        <button class="map-btn active" id="map-world">WORLD</button>
+                        <button class="map-btn" id="map-pacific">PACIFIC</button>
+                        <button class="map-btn" id="map-arctic">ARCTIC</button>
+                        <button class="map-btn" id="map-europe">EUROPE</button>
+                    </div>
+                    <div id="wireframe-map" style="height: 100%;">
+                        <div id="map-loading" style="display: flex; align-items: center; justify-content: center; height: 100%; color: #4a9eff; font-size: 12px;">
+                            <div>
+                                <div style="text-align: center; margin-bottom: 10px;">⟳ LOADING MAP...</div>
+                                <div style="text-align: center; font-size: 10px; color: #6bb3ff;">Connecting to tile server...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advisors Tab -->
+        <div class="tab-content" id="tab-advisors">
+            <div class="content-area" style="display: flex; flex-direction: column; padding: 20px;">
+                <div class="advisor-panel" style="margin: 0; border: none; display: flex; flex-direction: column; flex: 1; min-height: 0;">
+                    <div class="advisor-header" style="background: transparent; border: none; padding: 0 0 10px 0; flex-shrink: 0;">
+                        <div style="display: flex; gap: 15px; align-items: center;">
+                            <div class="panel-title" style="margin: 0; border: none; padding: 0;">SITUATION ROOM</div>
+                            <button class="map-btn" id="view-documents-btn" style="font-size: 10px; padding: 3px 8px;">
+                                📁 DOCUMENTS (<span id="doc-count">0</span>)
+                            </button>
+                        </div>
+                        <div style="font-size: 10px; color: #6bb3ff;">NSC Advisors standing by</div>
+                    </div>
+                    <div class="advisor-console" id="advisor-console" style="flex: 1; min-height: 0; max-height: none;">
+                        <div class="advisor-message advisor">
+                            <div class="advisor-name">[SITUATION ROOM]</div>
+                            <div>National Security Council assembled. Advisors: Rachel Chen (NSA), General Marcus Webb (SECDEF), Ambassador Sarah Okonkwo (State), Director James Park (DNI). Ask questions or request analysis.</div>
+                        </div>
+                    </div>
+                    <div class="advisor-input-area" style="flex-shrink: 0;">
+                        <input type="text" class="advisor-input" id="advisor-input" placeholder="Ask advisors... (e.g., 'What are the risks of deploying the carrier?')"/>
+                        <div class="typing-indicator" id="typing-indicator">● Advisors conferring...</div>
+                        <button class="advisor-send-btn" id="advisor-send-btn">ASK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Intel Feed Tab -->
+        <div class="tab-content" id="tab-intel">
+            <div class="content-area" style="display: flex; flex-direction: column; padding: 20px;">
+                <div class="panel" style="margin: 0; display: flex; flex-direction: column; flex: 1; min-height: 0;">
+                    <div class="panel-title" style="flex-shrink: 0;">INTELLIGENCE FEED</div>
+                    <div class="intel-feed" id="intel-feed" style="flex: 1; min-height: 0; height: auto; max-height: none;">
+                        <div class="intel-item">
+                            <div class="intel-timestamp">[SYSTEM INITIALIZATION]</div>
+                            Standing by for scenario deployment...
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="briefing-overlay" id="briefing-overlay">
+        <div class="briefing-container">
+            <div class="briefing-header">
+                <div class="classified">TOP SECRET // SPECIAL ACCESS REQUIRED</div>
+                <h2 id="briefing-title">CRISIS BRIEFING</h2>
+                <div style="margin-top: 5px; font-size: 11px; color: #6bb3ff;">NATIONAL SECURITY COUNCIL</div>
+            </div>
+            <div class="briefing-content" id="briefing-content">
+            </div>
+            <div class="briefing-footer">
+                <div class="slide-counter">
+                    <span id="current-slide">1</span> / <span id="total-slides">5</span>
+                </div>
+                <div class="slide-nav">
+                    <button class="nav-btn" id="prev-slide">◄ PREVIOUS</button>
+                    <button class="nav-btn" id="next-slide">NEXT ►</button>
+                    <button class="nav-btn" id="begin-scenario" style="display: none;">BEGIN SCENARIO</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="game-over" id="game-over">
+        <h2 id="game-over-title">SCENARIO CONCLUDED</h2>
+        <p id="game-over-text" style="font-size: 14px; margin-bottom: 20px;"></p>
+        <button class="restart-btn" id="restart-btn">RESTART SIMULATION</button>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
