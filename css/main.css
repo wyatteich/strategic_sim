@@ -882,3 +882,511 @@ body {
 .threat-circle {
     animation: pulse 2s infinite;
 }
+
+/* Loading Screen */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #0a0e17;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 1;
+    transition: opacity 0.6s ease;
+}
+
+.loading-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loading-content {
+    text-align: center;
+    max-width: 900px;
+    width: 90%;
+}
+
+.loading-title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #4a9eff;
+    letter-spacing: 6px;
+    margin-bottom: 8px;
+}
+
+.loading-subtitle {
+    font-size: 11px;
+    color: #ff4444;
+    letter-spacing: 4px;
+    margin-bottom: 40px;
+    padding: 6px 12px;
+    border: 1px solid #ff4444;
+    display: inline-block;
+}
+
+.loading-section-label {
+    font-size: 11px;
+    color: #6bb3ff;
+    letter-spacing: 3px;
+    margin-bottom: 15px;
+}
+
+.continue-btn {
+    display: block;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto 30px auto;
+    padding: 15px 20px;
+    background: rgba(74, 158, 255, 0.1);
+    border: 1px solid #4a9eff;
+    color: #4a9eff;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s ease;
+}
+
+.continue-btn:hover {
+    background: rgba(74, 158, 255, 0.25);
+    border-color: #6bb3ff;
+    box-shadow: 0 0 15px rgba(74, 158, 255, 0.3);
+}
+
+.continue-btn .continue-label {
+    font-size: 14px;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 4px;
+}
+
+.continue-btn .continue-detail {
+    font-size: 10px;
+    color: #6bb3ff;
+}
+
+.scenario-cards {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.scenario-card {
+    flex: 1;
+    min-width: 220px;
+    max-width: 280px;
+    padding: 20px;
+    background: rgba(74, 158, 255, 0.05);
+    border: 1px solid #1a3a5c;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s ease;
+}
+
+.scenario-card:hover {
+    background: rgba(74, 158, 255, 0.15);
+    border-color: #4a9eff;
+    box-shadow: 0 0 20px rgba(74, 158, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.scenario-card .card-tags {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.scenario-card .card-tag {
+    font-size: 9px;
+    padding: 2px 6px;
+    border: 1px solid #6bb3ff;
+    color: #6bb3ff;
+    letter-spacing: 1px;
+}
+
+.scenario-card .card-tag.difficulty-high {
+    border-color: #ff4444;
+    color: #ff4444;
+}
+
+.scenario-card .card-tag.difficulty-medium {
+    border-color: #ffb000;
+    color: #ffb000;
+}
+
+.scenario-card .card-title {
+    font-size: 14px;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+}
+
+.scenario-card .card-description {
+    font-size: 11px;
+    color: #8899aa;
+    line-height: 1.5;
+}
+
+/* ===== Document Viewer ===== */
+
+.doc-viewer-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.92);
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.doc-viewer-container {
+    background: #0a1628;
+    border: 1px solid #2a5580;
+    max-width: 720px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: #c8d8e8;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), 0 0 2px rgba(74, 158, 255, 0.3);
+}
+
+/* Classification banners */
+.doc-classification-banner {
+    text-align: center;
+    padding: 5px;
+    font-size: 11px;
+    font-weight: bold;
+    letter-spacing: 4px;
+}
+
+.doc-classification-banner.top-secret {
+    background: #cc0000;
+    color: #ffffff;
+}
+
+.doc-classification-banner.secret {
+    background: #cc5500;
+    color: #ffffff;
+}
+
+.doc-classification-banner.confidential {
+    background: #003399;
+    color: #ffffff;
+}
+
+.doc-classification-banner.unclassified {
+    background: #006600;
+    color: #ffffff;
+}
+
+/* Toolbar */
+.doc-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    padding: 6px 12px;
+    background: #0d1f35;
+    border-bottom: 1px solid #1a3a5c;
+}
+
+.doc-close-btn {
+    background: #1a2633;
+    border: 1px solid #4a9eff;
+    color: #6bb3ff;
+    padding: 4px 14px;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    letter-spacing: 1px;
+}
+
+.doc-close-btn:hover {
+    background: #2a4066;
+    color: #ffffff;
+}
+
+/* Header block */
+.doc-header-block {
+    padding: 16px 20px;
+    border-bottom: 2px solid #1a3a5c;
+    background: #0d1a2e;
+}
+
+.doc-letterhead {
+    text-align: center;
+    padding-bottom: 12px;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #1a3a5c;
+}
+
+.doc-letterhead-title {
+    font-size: 13px;
+    font-weight: bold;
+    color: #4a9eff;
+    letter-spacing: 3px;
+}
+
+.doc-letterhead-subtitle {
+    font-size: 9px;
+    color: #4a7090;
+    letter-spacing: 3px;
+    margin-top: 4px;
+}
+
+.doc-meta-row {
+    display: flex;
+    font-size: 11px;
+    margin: 4px 0;
+}
+
+.doc-meta-label {
+    color: #4a7090;
+    width: 90px;
+    flex-shrink: 0;
+    font-weight: bold;
+}
+
+.doc-meta-value {
+    color: #c8d8e8;
+}
+
+.doc-ref-number {
+    font-size: 10px;
+    color: #4a7090;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #1a3a5c;
+}
+
+/* Document body */
+.doc-body {
+    padding: 16px 20px;
+    line-height: 1.7;
+    white-space: pre-wrap;
+}
+
+.doc-section-title {
+    color: #4a9eff;
+    font-weight: bold;
+    font-size: 11px;
+    letter-spacing: 2px;
+    margin: 16px 0 8px 0;
+    text-transform: uppercase;
+    border-bottom: 1px solid #1a3a5c;
+    padding-bottom: 4px;
+}
+
+/* Key findings */
+.doc-key-findings {
+    margin: 8px 0;
+    padding: 10px 12px;
+    background: rgba(74, 158, 255, 0.04);
+    border-left: 3px solid #4a9eff;
+    list-style: none;
+}
+
+.doc-key-findings li {
+    margin: 6px 0;
+    padding-left: 8px;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.doc-key-findings li::before {
+    content: "\25B8  ";
+    color: #4a9eff;
+}
+
+/* Assessment box */
+.doc-assessment {
+    margin: 16px 0 8px 0;
+    padding: 12px;
+    background: rgba(255, 176, 0, 0.06);
+    border: 1px solid rgba(255, 176, 0, 0.3);
+}
+
+.doc-assessment-label {
+    font-size: 10px;
+    color: #ffb000;
+    letter-spacing: 2px;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.doc-assessment-text {
+    color: #ffb000;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+/* Document type accent colors */
+.doc-viewer-container[data-doc-type="INTEL_REPORT"] .doc-letterhead-title {
+    color: #ff4444;
+}
+.doc-viewer-container[data-doc-type="INTEL_REPORT"] .doc-classification-banner {
+    border-left: 3px solid #ff4444;
+    border-right: 3px solid #ff4444;
+}
+
+.doc-viewer-container[data-doc-type="MILITARY_ASSESSMENT"] .doc-letterhead-title {
+    color: #ffb000;
+}
+.doc-viewer-container[data-doc-type="MILITARY_ASSESSMENT"] .doc-classification-banner {
+    border-left: 3px solid #ffb000;
+    border-right: 3px solid #ffb000;
+}
+
+.doc-viewer-container[data-doc-type="DIPLOMATIC_CABLE"] .doc-letterhead-title {
+    color: #4a9eff;
+}
+
+.doc-viewer-container[data-doc-type="NSC_MEMO"] .doc-letterhead-title {
+    color: #ffffff;
+}
+.doc-viewer-container[data-doc-type="NSC_MEMO"] .doc-letterhead-subtitle::after {
+    content: " \2014  THE WHITE HOUSE";
+}
+
+/* Document footer */
+.doc-footer {
+    padding: 10px 20px;
+    border-top: 1px solid #1a3a5c;
+    font-size: 9px;
+    color: #4a7090;
+    text-align: center;
+    letter-spacing: 1px;
+}
+
+/* ===== Document Library ===== */
+
+.doc-library-container {
+    background: #0a1628;
+    border: 1px solid #2a5580;
+    padding: 20px;
+    max-width: 800px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: #c8d8e8;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+}
+
+.doc-library-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #1a3a5c;
+}
+
+.doc-library-title {
+    color: #4a9eff;
+    font-weight: bold;
+    font-size: 14px;
+    letter-spacing: 2px;
+}
+
+.doc-library-count {
+    font-size: 10px;
+    color: #4a7090;
+    margin-top: 4px;
+}
+
+.doc-library-item {
+    padding: 12px;
+    border-left: 3px solid #1a3a5c;
+    background: #0d1a2e;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.doc-library-item:hover {
+    background: #122440;
+    border-left-color: #4a9eff;
+}
+
+.doc-library-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.doc-library-item-author {
+    color: #4a9eff;
+    font-weight: bold;
+    font-size: 11px;
+}
+
+.doc-library-item-type {
+    font-size: 9px;
+    padding: 2px 6px;
+    border: 1px solid #4a7090;
+    color: #4a7090;
+    letter-spacing: 1px;
+}
+
+.doc-library-item-date {
+    color: #4a7090;
+    font-size: 10px;
+    margin-bottom: 4px;
+}
+
+.doc-library-item-preview {
+    color: #8899aa;
+    font-size: 11px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.doc-library-empty {
+    color: #4a7090;
+    text-align: center;
+    padding: 30px 20px;
+    letter-spacing: 1px;
+}
+
+/* Attachment preview in advisor console */
+.advisor-attachment {
+    margin-top: 8px;
+    padding: 8px 10px;
+    background: rgba(74, 158, 255, 0.06);
+    border-left: 2px solid #4a9eff;
+    cursor: pointer;
+    transition: background 0.15s ease;
+}
+
+.advisor-attachment:hover {
+    background: rgba(74, 158, 255, 0.12);
+}
+
+.advisor-attachment-label {
+    color: #4a9eff;
+    font-weight: bold;
+    font-size: 10px;
+    margin-bottom: 3px;
+}
+
+.advisor-attachment-preview {
+    color: #6bb3ff;
+    font-size: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

@@ -1,14 +1,16 @@
 # Strategic Crisis Simulation
 
-A sophisticated geopolitical crisis management game featuring AI-powered advisors, intelligence briefings with ASCII tactical maps, and complex decision trees with cascading consequences.
+A sophisticated geopolitical crisis management game featuring AI-powered advisors, intelligence briefings with interactive maps, and complex decision trees with cascading consequences.
 
 ## Features
 
 ### 🎮 Core Gameplay
 - **Three immersive scenarios**: Taiwan Strait Crisis, Arctic Territorial Dispute, Critical Infrastructure Cyberattack
+- **Scenario selection screen**: Choose your crisis or continue saved games
 - **Six strategic metrics**: Balance stability, diplomacy, military readiness, public support, allied confidence, and intelligence
 - **Dynamic DEFCON system**: Watch threat levels rise and fall based on your decisions
 - **Branching consequences**: Every choice shapes the next phase of the crisis
+- **Auto-save system**: Game state persists across sessions via localStorage
 
 ### 📊 Intelligence System
 - **5-slide briefings** before each crisis with:
@@ -18,16 +20,25 @@ A sophisticated geopolitical crisis management game featuring AI-powered advisor
   - Strategic implications
   - Decision frameworks
 - **Real-time intel feed** tracking crisis developments
-- **Global situation map** showing regional statuses
+- **Interactive Leaflet.js map** showing global threats and force movements
 
 ### 🤖 AI-Powered Advisors
 Consult four specialized advisors powered by Claude AI:
-- **National Security Advisor**: Strategic synthesis across all domains
-- **Joint Chiefs of Staff**: Military capabilities and operational planning
-- **Secretary of State**: Diplomatic solutions and alliance management  
-- **Director of Intelligence**: Enemy intentions and probability assessments
+- **Rachel Chen (National Security Advisor)**: Strategic synthesis and policy coordination
+- **General Marcus Webb (Secretary of Defense)**: Military options and operational planning
+- **Ambassador Sarah Okonkwo (Secretary of State)**: Diplomatic solutions and alliance management
+- **Director James Park (Director of National Intelligence)**: Intelligence analysis and threat assessment
 
-Each advisor maintains conversation history and provides contextual, in-character responses to your queries.
+Each advisor has a unique personality, background, and expertise defined in JSON profiles. They provide contextual, in-character responses and can generate classified intelligence reports.
+
+### 📄 Intelligence Documents
+Advisors generate authentic-looking intelligence reports with:
+- **Classification banners** (TOP SECRET//SCI, SECRET//NOFORN, CONFIDENTIAL)
+- **Military date-time groups** (DTG format)
+- **Document metadata** (FROM/TO/SUBJECT/REF headers)
+- **Key findings** sections with structured analysis
+- **Assessment boxes** with bottom-line recommendations
+- **Document archive** for reviewing all generated reports
 
 ### 🎨 Retro Aesthetic
 - Authentic 1980s terminal interface inspired by WarGames
@@ -37,11 +48,65 @@ Each advisor maintains conversation history and provides contextual, in-characte
 
 ## Quick Start
 
-1. Open `crisis_simulation.html` in any modern browser
-2. No installation or dependencies required
-3. Read the intelligence briefing
-4. Make decisions and consult advisors
-5. Navigate the crisis to victory or defeat
+### Running Locally
+
+1. **Install dependencies**:
+   ```bash
+   npm install
+   ```
+
+2. **Set up your API key**:
+   - Create a `.env` file in the project root
+   - Add your Anthropic API key:
+     ```
+     ANTHROPIC_API_KEY=sk-ant-api03-...
+     PORT=3000
+     ```
+
+3. **Start the server**:
+   ```bash
+   npm start
+   ```
+
+4. **Open your browser**:
+   - Navigate to `http://localhost:3000`
+   - Select a scenario from the loading screen
+   - Read the intelligence briefing
+   - Make decisions and consult advisors
+
+### Project Structure
+
+```
+strategic-sim/
+├── index.html              # Main HTML shell
+├── server.js               # Express server & API proxy
+├── package.json            # Dependencies
+├── .env                    # API keys (create this)
+├── css/
+│   └── main.css           # All styles
+├── js/
+│   ├── main.js            # Entry point & boot
+│   ├── advisors.js        # AI advisor system
+│   ├── api.js             # API layer
+│   ├── commands.js        # Command processing
+│   ├── game.js            # Game flow
+│   ├── intel.js           # Intel feed
+│   ├── map.js             # Leaflet map
+│   ├── scenarios.js       # Scenario loader
+│   ├── state.js           # Game state & persistence
+│   └── ui.js              # UI utilities
+├── scenarios/
+│   ├── manifest.json      # Scenario registry
+│   ├── taiwan_strait.json
+│   ├── arctic_resources.json
+│   └── cyber_attack.json
+└── advisors/
+    ├── manifest.json      # Advisor registry
+    ├── rachel_chen.json   # NSA profile
+    ├── marcus_webb.json   # SECDEF profile
+    ├── sarah_okonkwo.json # State profile
+    └── james_park.json    # DNI profile
+```
 
 ## Documentation
 
@@ -124,37 +189,69 @@ Hidden information, fog of war, bluffing, and strategic competition.
 ## Technical Stack
 
 **Current:**
-- Vanilla JavaScript
-- CSS3 for retro styling
-- Anthropic Claude API for advisors
-- Single HTML file deployment
+- **Frontend**: ES6 modules, vanilla JavaScript (no build tools)
+- **Backend**: Node.js + Express (API proxy)
+- **AI**: Anthropic Claude API (Sonnet 4)
+- **Mapping**: Leaflet.js for interactive maps
+- **Persistence**: localStorage for game state
+- **Architecture**: Modular design with external JSON for scenarios/advisors
 
 **Future (Roadmap):**
-- React frontend
-- Node.js + Express backend
-- PostgreSQL database
-- Socket.io for real-time multiplayer
+- React frontend for richer UI
+- PostgreSQL database for multiplayer
+- Socket.io for real-time gameplay
 - Web Audio API for sound design
+- Authentication & user accounts
 
 ## Development
 
 ### Adding Scenarios
-Scenarios are defined in JavaScript objects with:
-- Metadata (id, title, description)
-- Briefing slides (5 slides with HTML content)
-- Decision options (text, effects, intel messages)
-- Consequence phases (follow-up scenarios)
+Scenarios are JSON files in `scenarios/`:
+1. Create a new JSON file (e.g., `my_scenario.json`)
+2. Add entry to `scenarios/manifest.json`
+3. Define structure:
+   ```json
+   {
+     "id": "my_scenario",
+     "title": "SCENARIO TITLE",
+     "description": "Brief description...",
+     "briefing": [
+       { "title": "Slide 1", "content": "HTML content..." }
+     ],
+     "options": [
+       {
+         "text": "Decision option...",
+         "effects": { "stability": -5, "diplomacy": 10 },
+         "intel": "Intel message...",
+         "defcon": 4
+       }
+     ]
+   }
+   ```
 
-See QUICKSTART.md for detailed instructions.
+### Adding/Customizing Advisors
+Advisors are JSON profiles in `advisors/`:
+1. Create a new JSON file (e.g., `new_advisor.json`)
+2. Add entry to `advisors/manifest.json`
+3. Define profile:
+   ```json
+   {
+     "id": "advisor_id",
+     "name": "Full Name",
+     "shortName": "Short Name",
+     "title": "Position Title",
+     "agency": "AGENCY",
+     "role": "Expertise description",
+     "personality": "Character traits...",
+     "background": "Biography...",
+     "docType": "INTEL_REPORT",
+     "docLabel": "DOCUMENT TYPE LABEL",
+     "defaultClassification": "SECRET",
+     "fullTitle": "FORMAL TITLE FOR DOCUMENTS"
+   }
+   ```
 
-### Extending Advisors
-Advisor personalities are defined in system prompts:
-```javascript
-advisorPersonas = {
-    natsec: `You are the National Security Advisor...`,
-    // Add custom advisors here
-}
-```
+No code changes needed — the system loads advisors dynamically.
 
 ### Creating ASCII Art
 Use box-drawing characters for tactical maps:
@@ -269,9 +366,19 @@ Let's build the definitive crisis management simulation together.
 
 ---
 
-**Current Version**: 1.0 (Proof of Concept)  
-**Status**: Playable, seeking feedback  
-**Next Milestone**: Persistence layer and scenario system refactor
+**Current Version**: 2.0
+**Status**: Fully playable with modular architecture
+**Recent Updates**:
+- ✅ Modular scenario system (external JSON files)
+- ✅ Modular advisor profiles (personality, background, document types)
+- ✅ Styled intelligence documents (classification banners, metadata, key findings)
+- ✅ Loading screen with scenario selection
+- ✅ Auto-save/load system with localStorage
+- ✅ Interactive Leaflet.js map
+- ✅ XSS vulnerability patched
+- ✅ Removed legacy dead code
+
+**Next Milestone**: Multiplayer infrastructure
 
 ---
 

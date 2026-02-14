@@ -1,12 +1,197 @@
-// Advisor system: AI-powered situation room
+// Advisor system: AI-powered situation room with modular advisor profiles
 
 import { gameState, saveGame } from './state.js';
 import { callAdvisor } from './api.js';
 import { escapeHTML } from './ui.js';
 import { addIntel } from './intel.js';
 
-export function initAdvisorSystem() {
+// --- Advisor profile loader ---
+
+let advisorProfiles = [];
+
+async function loadAdvisorManifest() {
+    const res = await fetch('advisors/manifest.json');
+    if (!res.ok) throw new Error(`Failed to load advisor manifest: ${res.status}`);
+    return res.json();
+}
+
+async function loadAdvisorProfile(filename) {
+    const res = await fetch(`advisors/${filename}`);
+    if (!res.ok) throw new Error(`Failed to load advisor ${filename}: ${res.status}`);
+    return res.json();
+}
+
+async function loadAllAdvisors() {
+    const manifest = await loadAdvisorManifest();
+    const profiles = await Promise.all(manifest.map(entry => loadAdvisorProfile(entry.file)));
+    return profiles;
+}
+
+function getAdvisorProfile(name) {
+    if (!name) return null;
+    const lower = name.toLowerCase();
+    return advisorProfiles.find(a =>
+        a.name.toLowerCase() === lower ||
+        a.shortName.toLowerCase() === lower
+    ) || null;
+}
+
+// --- Document rendering helpers ---
+
+function classificationToCSS(classification) {
+    if (!classification) return 'secret';
+    const upper = classification.toUpperCase();
+    if (upper.includes('TOP SECRET')) return 'top-secret';
+    if (upper.includes('SECRET')) return 'secret';
+    if (upper.includes('CONFIDENTIAL')) return 'confidential';
+    return 'unclassified';
+}
+
+function generateDTG() {
+    const now = new Date();
+    const day = String(now.getUTCDate()).padStart(2, '0');
+    const hour = String(now.getUTCHours()).padStart(2, '0');
+    const min = String(now.getUTCMinutes()).padStart(2, '0');
+    const months = ['JAN','FEB','MAR','APR','MAY','JUN',
+                    'JUL','AUG','SEP','OCT','NOV','DEC'];
+    return `${day}${hour}${min}Z${months[now.getUTCMonth()]}${now.getUTCFullYear()}`;
+}
+
+function parseStructuredContent(content) {
+    if (typeof content === 'object' && content !== null && content.docType) {
+        return content;
+    }
+    if (typeof content === 'string') {
+        try {
+            const parsed = JSON.parse(content);
+            if (parsed && parsed.docType) return parsed;
+        } catch (e) { /* plain text */ }
+    }
+    return null;
+}
+
+function renderStructuredDocument(doc, author) {
+    const classLevel = classificationToCSS(doc.classification);
+    const profile = getAdvisorProfile(author);
+    const docLabel = (profile && profile.docLabel) || doc.docType || 'CLASSIFIED DOCUMENT';
+    const fullTitle = (profile && profile.fullTitle) || author;
+    const dtg = doc.dtg || generateDTG();
+
+    const findingsHTML = (doc.keyFindings && doc.keyFindings.length > 0)
+        ? `<div class="doc-section-title">KEY FINDINGS</div>
+           <ul class="doc-key-findings">
+             ${doc.keyFindings.map(f => `<li>${escapeHTML(f)}</li>`).join('')}
+           </ul>`
+        : '';
+
+    const assessmentHTML = doc.assessment
+        ? `<div class="doc-assessment">
+             <div class="doc-assessment-label">ASSESSMENT</div>
+             <div class="doc-assessment-text">${escapeHTML(doc.assessment)}</div>
+           </div>`
+        : '';
+
+    return `
+        <div class="doc-viewer-container" data-doc-type="${escapeHTML(doc.docType)}">
+            <div class="doc-classification-banner ${classLevel}">
+                ${escapeHTML(doc.classification || 'CLASSIFIED')}
+            </div>
+            <div class="doc-toolbar">
+                <button class="doc-close-btn">CLOSE</button>
+            </div>
+            <div class="doc-header-block">
+                <div class="doc-letterhead">
+                    <div class="doc-letterhead-title">${escapeHTML(docLabel)}</div>
+                    <div class="doc-letterhead-subtitle">UNITED STATES GOVERNMENT</div>
+                </div>
+                <div class="doc-meta-row">
+                    <span class="doc-meta-label">DTG:</span>
+                    <span class="doc-meta-value">${escapeHTML(dtg)}</span>
+                </div>
+                <div class="doc-meta-row">
+                    <span class="doc-meta-label">FROM:</span>
+                    <span class="doc-meta-value">${escapeHTML(fullTitle)}</span>
+                </div>
+                <div class="doc-meta-row">
+                    <span class="doc-meta-label">TO:</span>
+                    <span class="doc-meta-value">THE PRESIDENT</span>
+                </div>
+                <div class="doc-meta-row">
+                    <span class="doc-meta-label">SUBJECT:</span>
+                    <span class="doc-meta-value">${escapeHTML(doc.subject || 'N/A')}</span>
+                </div>
+                <div class="doc-ref-number">REF: ${escapeHTML(doc.refNumber || 'N/A')}</div>
+            </div>
+            <div class="doc-body">
+                ${escapeHTML(doc.body || '')}
+                ${findingsHTML}
+                ${assessmentHTML}
+            </div>
+            <div class="doc-footer">
+                DISTRIBUTION LIMITED — AUTHORIZED RECIPIENTS ONLY
+            </div>
+            <div class="doc-classification-banner ${classLevel}">
+                ${escapeHTML(doc.classification || 'CLASSIFIED')}
+            </div>
+        </div>
+    `;
+}
+
+function renderLegacyDocument(content, author) {
+    return `
+        <div class="doc-viewer-container" data-doc-type="LEGACY">
+            <div class="doc-classification-banner secret">CLASSIFIED</div>
+            <div class="doc-toolbar">
+                <button class="doc-close-btn">CLOSE</button>
+            </div>
+            <div class="doc-header-block">
+                <div class="doc-letterhead">
+                    <div class="doc-letterhead-title">CLASSIFIED DOCUMENT</div>
+                    <div class="doc-letterhead-subtitle">UNITED STATES GOVERNMENT</div>
+                </div>
+                <div class="doc-meta-row">
+                    <span class="doc-meta-label">FROM:</span>
+                    <span class="doc-meta-value">${escapeHTML(author)}</span>
+                </div>
+                <div class="doc-meta-row">
+                    <span class="doc-meta-label">DTG:</span>
+                    <span class="doc-meta-value">${generateDTG()}</span>
+                </div>
+            </div>
+            <div class="doc-body">${escapeHTML(typeof content === 'string' ? content : JSON.stringify(content))}</div>
+            <div class="doc-footer">
+                DISTRIBUTION LIMITED — AUTHORIZED RECIPIENTS ONLY
+            </div>
+            <div class="doc-classification-banner secret">CLASSIFIED</div>
+        </div>
+    `;
+}
+
+// --- Attachment preview helper ---
+
+function getAttachmentPreview(attachment) {
+    const structured = parseStructuredContent(attachment);
+    if (structured) {
+        const typeLabel = structured.docType || 'DOCUMENT';
+        const subject = structured.subject || '';
+        return `[${typeLabel}] ${subject}`;
+    }
+    return String(attachment).substring(0, 100);
+}
+
+// --- Public API ---
+
+export async function initAdvisorSystem() {
     if (!gameState.documents) gameState.documents = [];
+
+    // Load advisor profiles
+    try {
+        advisorProfiles = await loadAllAdvisors();
+        console.log(`Loaded ${advisorProfiles.length} advisor profiles`);
+    } catch (error) {
+        console.error('Failed to load advisor profiles:', error);
+        addIntel('WARNING: Advisor profiles failed to load. Using defaults.', 'warning');
+    }
 
     document.getElementById('advisor-send-btn').addEventListener('click', sendAdvisorQuery);
     document.getElementById('view-documents-btn').addEventListener('click', showDocumentLibrary);
@@ -56,15 +241,30 @@ STRATEGIC METRICS:
 ${gameState.scenario ? 'SITUATION: ' + gameState.scenario.description : ''}
     `.trim();
 
+    // Build advisor list from loaded profiles (or fallback to defaults)
+    let advisorListText;
+    if (advisorProfiles.length > 0) {
+        advisorListText = advisorProfiles.map(a =>
+            `- ${a.name} (${a.agency} - ${a.title}): ${a.role}\n  Personality: ${a.personality}\n  Background: ${a.background}`
+        ).join('\n\n');
+    } else {
+        advisorListText = `- Rachel Chen (NSC - National Security Advisor): Strategic synthesis, balances all factors
+- General Marcus Webb (DOD - Secretary of Defense): Military options, force readiness
+- Ambassador Sarah Okonkwo (STATE - Secretary of State): Diplomacy, alliances, international law
+- Director James Park (DNI - Director of National Intelligence): Intelligence analysis, enemy intentions`;
+    }
+
+    // Build valid advisor names for the response format
+    const advisorNames = advisorProfiles.length > 0
+        ? advisorProfiles.map(a => a.shortName).join('|')
+        : 'Rachel Chen|General Webb|Ambassador Okonkwo|Director Park';
+
     try {
         const data = await callAdvisor([{
             role: 'user',
             content: `You are running a National Security Council situation room. Advisors present:
 
-- Rachel Chen (NSA - National Security Advisor): Strategic synthesis, balances all factors
-- General Marcus Webb (SECDEF - Secretary of Defense): Military options, force readiness
-- Ambassador Sarah Okonkwo (State - Secretary of State): Diplomacy, alliances, international law
-- Director James Park (DNI - Director of National Intelligence): Intelligence analysis, enemy intentions
+${advisorListText}
 
 ${situationContext}
 
@@ -73,9 +273,19 @@ QUESTION FROM PRESIDENT: "${query}"
 Determine which advisor(s) should respond based on their expertise. Output VALID JSON ARRAY (no markdown, no code blocks):
 [
     {
-        "advisor": "Rachel Chen|General Webb|Ambassador Okonkwo|Director Park",
+        "advisor": "${advisorNames}",
         "message": "Brief spoken response (2-3 sentences max, first person)",
-        "attachment": "OPTIONAL: If question requests analysis/report, provide structured data here (intel report, force assessment, etc). Otherwise null. Keep under 150 words."
+        "attachment": "OPTIONAL. If question requests analysis/report/assessment OR complex data would help, return a JSON object (NOT a string):
+{
+  \\"docType\\": \\"INTEL_REPORT|MILITARY_ASSESSMENT|DIPLOMATIC_CABLE|NSC_MEMO\\",
+  \\"classification\\": \\"TOP SECRET//SCI|SECRET//NOFORN|SECRET|CONFIDENTIAL\\",
+  \\"refNumber\\": \\"e.g. IIR-2025-00347\\",
+  \\"subject\\": \\"Brief subject line\\",
+  \\"body\\": \\"Main analysis text (under 120 words)\\",
+  \\"keyFindings\\": [\\"finding 1\\", \\"finding 2\\", \\"finding 3\\"],
+  \\"assessment\\": \\"Bottom-line assessment or recommendation\\"
+}
+Otherwise null. Each advisor should use their appropriate docType."
     }
 ]
 
@@ -85,6 +295,7 @@ RULES:
 - Only include attachment if question explicitly asks for analysis/report/assessment OR if complex data would help
 - Advisors can disagree with each other
 - Use first person ("I recommend..." not "NSA recommends...")
+- Stay in character with each advisor's personality and background
 - If simple question, one advisor responds
 - Return valid JSON array only`
         }]);
@@ -132,11 +343,13 @@ export function addAdvisorMessage(type, name, content, attachment = null) {
     if (attachment) {
         const docId = `doc_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
+        const previewText = getAttachmentPreview(attachment);
+
         const attachDiv = document.createElement('div');
-        attachDiv.style.cssText = 'margin-top: 8px; padding: 8px; background: rgba(74, 158, 255, 0.1); border-left: 2px solid #4a9eff; font-size: 10px; cursor: pointer;';
+        attachDiv.className = 'advisor-attachment';
         attachDiv.innerHTML = `
-            <div style="color: #4a9eff; font-weight: bold; margin-bottom: 4px;">📎 ATTACHMENT (click to view)</div>
-            <div style="color: #6bb3ff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHTML(attachment.substring(0, 100))}...</div>
+            <div class="advisor-attachment-label">\u{1F4CE} ATTACHMENT (click to view)</div>
+            <div class="advisor-attachment-preview">${escapeHTML(previewText)}</div>
         `;
 
         attachDiv.onclick = () => openDocument(docId, name, attachment);
@@ -166,36 +379,20 @@ export function openDocument(docId, author, content) {
     const existing = document.getElementById('document-viewer');
     if (existing) existing.remove();
 
+    const structured = parseStructuredContent(content);
+
     const modal = document.createElement('div');
     modal.id = 'document-viewer';
-    modal.style.cssText = `
-        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(0, 0, 0, 0.9); z-index: 3000;
-        display: flex; align-items: center; justify-content: center; padding: 20px;
-    `;
+    modal.className = 'doc-viewer-overlay';
 
-    modal.innerHTML = `
-        <div style="
-            background: #001a33; border: 2px solid #4a9eff; padding: 20px;
-            max-width: 700px; max-height: 80vh; overflow-y: auto;
-            color: #ffb000; font-family: 'Courier New', monospace; font-size: 12px;
-        ">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #4a9eff;">
-                <div>
-                    <div style="color: #4a9eff; font-weight: bold;">CLASSIFIED DOCUMENT</div>
-                    <div style="font-size: 10px; color: #6bb3ff; margin-top: 5px;">Author: ${escapeHTML(author)}</div>
-                </div>
-                <button id="close-document-viewer" style="
-                    background: #1a2633; border: 1px solid #4a9eff; color: #ffb000;
-                    padding: 5px 15px; cursor: pointer; font-family: 'Courier New', monospace;
-                ">CLOSE</button>
-            </div>
-            <div style="white-space: pre-wrap; line-height: 1.6;">${escapeHTML(content)}</div>
-        </div>
-    `;
+    if (structured) {
+        modal.innerHTML = renderStructuredDocument(structured, author);
+    } else {
+        modal.innerHTML = renderLegacyDocument(content, author);
+    }
 
     document.body.appendChild(modal);
-    modal.querySelector('#close-document-viewer').onclick = () => modal.remove();
+    modal.querySelector('.doc-close-btn').onclick = () => modal.remove();
     modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
 }
 
@@ -207,43 +404,37 @@ function showDocumentLibrary() {
 
     const modal = document.createElement('div');
     modal.id = 'document-library';
-    modal.style.cssText = `
-        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-        background: rgba(0, 0, 0, 0.9); z-index: 3000;
-        display: flex; align-items: center; justify-content: center; padding: 20px;
-    `;
+    modal.className = 'doc-viewer-overlay';
 
     const docList = docs.length > 0
         ? docs.map(doc => {
-            const preview = escapeHTML(doc.content.substring(0, 80));
+            const structured = parseStructuredContent(doc.content);
+            const typeLabel = structured ? structured.docType : 'DOCUMENT';
+            const preview = structured
+                ? escapeHTML(structured.subject || structured.body?.substring(0, 60) || '')
+                : escapeHTML(String(doc.content).substring(0, 80));
+
             return `
-                <div class="doc-library-item" data-doc-id="${doc.id}" style="
-                    padding: 10px; border-left: 3px solid #4a9eff;
-                    background: #001a33; margin-bottom: 10px; cursor: pointer;
-                ">
-                    <div style="color: #4a9eff; font-weight: bold; font-size: 11px;">${escapeHTML(doc.author)}</div>
-                    <div style="color: #6bb3ff; font-size: 10px; margin-top: 3px;">${new Date(doc.timestamp).toLocaleString()}</div>
-                    <div style="color: #ffb000; font-size: 11px; margin-top: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${preview}...</div>
+                <div class="doc-library-item" data-doc-id="${doc.id}">
+                    <div class="doc-library-item-header">
+                        <span class="doc-library-item-author">${escapeHTML(doc.author)}</span>
+                        <span class="doc-library-item-type">${escapeHTML(typeLabel)}</span>
+                    </div>
+                    <div class="doc-library-item-date">${new Date(doc.timestamp).toLocaleString()}</div>
+                    <div class="doc-library-item-preview">${preview}</div>
                 </div>
             `;
         }).join('')
-        : '<div style="color: #6bb3ff; text-align: center; padding: 20px;">No documents generated yet.</div>';
+        : '<div class="doc-library-empty">NO DOCUMENTS IN ARCHIVE</div>';
 
     modal.innerHTML = `
-        <div style="
-            background: #001a33; border: 2px solid #4a9eff; padding: 20px;
-            max-width: 800px; width: 100%; max-height: 80vh; overflow-y: auto;
-            color: #ffb000; font-family: 'Courier New', monospace; font-size: 12px;
-        ">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #4a9eff;">
+        <div class="doc-library-container">
+            <div class="doc-library-header">
                 <div>
-                    <div style="color: #4a9eff; font-weight: bold; font-size: 14px;">DOCUMENT LIBRARY</div>
-                    <div style="font-size: 10px; color: #6bb3ff; margin-top: 5px;">${docs.length} document(s)</div>
+                    <div class="doc-library-title">DOCUMENT ARCHIVE</div>
+                    <div class="doc-library-count">${docs.length} document(s) on file</div>
                 </div>
-                <button id="close-doc-library" style="
-                    background: #1a2633; border: 1px solid #4a9eff; color: #ffb000;
-                    padding: 5px 15px; cursor: pointer; font-family: 'Courier New', monospace;
-                ">CLOSE</button>
+                <button class="doc-close-btn">CLOSE</button>
             </div>
             <div>${docList}</div>
         </div>
@@ -251,8 +442,7 @@ function showDocumentLibrary() {
 
     document.body.appendChild(modal);
 
-    // Wire up click handlers
-    modal.querySelector('#close-doc-library').onclick = () => modal.remove();
+    modal.querySelector('.doc-close-btn').onclick = () => modal.remove();
     modal.querySelectorAll('.doc-library-item').forEach(item => {
         item.onclick = () => {
             const doc = docs.find(d => d.id === item.dataset.docId);
