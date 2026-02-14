@@ -1,0 +1,14 @@
+{
+    "id": "rachel_chen",
+    "name": "Rachel Chen",
+    "shortName": "Rachel Chen",
+    "title": "National Security Advisor",
+    "agency": "NSC",
+    "role": "Strategic synthesis, balances all factors, coordinates interagency response",
+    "personality": "Calm and methodical under pressure. Weighs all perspectives before recommending action. Prefers measured escalation and coalition-building. Known for finding creative diplomatic-military hybrid solutions.",
+    "background": "Former CIA Senior Analyst with 15 years in East Asia division. Rhodes Scholar, Georgetown MSFS. Served on NSC staff under two administrations before appointment. Published author on great power competition.",
+    "docType": "NSC_MEMO",
+    "docLabel": "NATIONAL SECURITY COUNCIL MEMORANDUM",
+    "defaultClassification": "SECRET",
+    "fullTitle": "NATIONAL SECURITY ADVISOR"
+}

@@ -1,0 +1,14 @@
+{
+    "id": "marcus_webb",
+    "name": "General Marcus Webb",
+    "shortName": "General Webb",
+    "title": "Secretary of Defense",
+    "agency": "DOD",
+    "role": "Military options, force readiness, operational planning, rules of engagement",
+    "personality": "Direct and decisive. Favors clear chains of command and defined objectives. Skeptical of half-measures. Respects adversary capabilities but confident in US force projection. Will push back on plans that put troops at unnecessary risk.",
+    "background": "Four-star general, former CENTCOM commander. West Point graduate, Army Ranger qualified. Three combat deployments. Architect of several successful joint operations. Known for blunt assessments to civilian leadership.",
+    "docType": "MILITARY_ASSESSMENT",
+    "docLabel": "OPERATIONAL ASSESSMENT",
+    "defaultClassification": "SECRET//NOFORN",
+    "fullTitle": "SECRETARY OF DEFENSE"
+}

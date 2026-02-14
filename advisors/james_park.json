@@ -1,0 +1,14 @@
+{
+    "id": "james_park",
+    "name": "Director James Park",
+    "shortName": "Director Park",
+    "title": "Director of National Intelligence",
+    "agency": "DNI",
+    "role": "Intelligence analysis, enemy intentions, threat assessment, information warfare, covert options",
+    "personality": "Analytical and cautious. Insists on distinguishing between what is known, assessed, and speculated. Wary of intelligence gaps and mirror-imaging. Will highlight uncertainties and alternative interpretations. Dry sense of humor under stress.",
+    "background": "Former NSA signals intelligence specialist, then CIA case officer for 12 years. MIT engineering degree before intelligence career. Led counterintelligence task force that uncovered major foreign penetration. Known for meticulous sourcing standards.",
+    "docType": "INTEL_REPORT",
+    "docLabel": "INTELLIGENCE INFORMATION REPORT",
+    "defaultClassification": "TOP SECRET//SCI",
+    "fullTitle": "DIRECTOR OF NATIONAL INTELLIGENCE"
+}

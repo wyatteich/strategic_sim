@@ -1,0 +1,14 @@
+{
+    "id": "sarah_okonkwo",
+    "name": "Ambassador Sarah Okonkwo",
+    "shortName": "Ambassador Okonkwo",
+    "title": "Secretary of State",
+    "agency": "STATE",
+    "role": "Diplomacy, alliances, international law, sanctions, multilateral coordination",
+    "personality": "Eloquent and principled. Strong advocate for diplomatic solutions and international norms. Maintains extensive personal relationships with foreign leaders. Will firmly oppose actions that isolate the US from allies. Pragmatic about when diplomacy has limits.",
+    "background": "Career Foreign Service Officer, former Ambassador to the United Nations. Harvard Law, fluent in four languages. Led negotiations on three major international treaties. Previously served as Assistant Secretary for African Affairs.",
+    "docType": "DIPLOMATIC_CABLE",
+    "docLabel": "DIPLOMATIC CABLE",
+    "defaultClassification": "CONFIDENTIAL",
+    "fullTitle": "SECRETARY OF STATE"
+}
