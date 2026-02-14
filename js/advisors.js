@@ -188,9 +188,18 @@ export async function initAdvisorSystem() {
     try {
         advisorProfiles = await loadAllAdvisors();
         console.log(`Loaded ${advisorProfiles.length} advisor profiles`);
+
+        // Update welcome message with loaded advisors
+        updateWelcomeMessage();
     } catch (error) {
         console.error('Failed to load advisor profiles:', error);
         addIntel('WARNING: Advisor profiles failed to load. Using defaults.', 'warning');
+
+        // Show fallback message
+        const welcomeEl = document.getElementById('advisor-welcome-message');
+        if (welcomeEl) {
+            welcomeEl.textContent = 'National Security Council assembled. Advisors standing by.';
+        }
     }
 
     document.getElementById('advisor-send-btn').addEventListener('click', sendAdvisorQuery);
@@ -201,6 +210,20 @@ export async function initAdvisorSystem() {
             sendAdvisorQuery();
         }
     });
+}
+
+function updateWelcomeMessage() {
+    const welcomeEl = document.getElementById('advisor-welcome-message');
+    if (!welcomeEl) return;
+
+    if (advisorProfiles.length === 0) {
+        welcomeEl.textContent = 'National Security Council assembled. Advisors standing by.';
+        return;
+    }
+
+    // Build advisor list: "Name (Agency)"
+    const advisorList = advisorProfiles.map(a => `${a.shortName} (${a.agency})`).join(', ');
+    welcomeEl.textContent = `National Security Council assembled. Advisors: ${advisorList}. Ask questions or request analysis.`;
 }
 
 async function sendAdvisorQuery() {
