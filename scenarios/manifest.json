@@ -1,0 +1,5 @@
+[
+    {"id": "taiwan_strait", "title": "TAIWAN STRAIT CRISIS", "file": "taiwan_strait.json"},
+    {"id": "arctic_resources", "title": "ARCTIC TERRITORIAL DISPUTE", "file": "arctic_resources.json"},
+    {"id": "cyber_attack", "title": "CRITICAL INFRASTRUCTURE BREACH", "file": "cyber_attack.json"}
+]

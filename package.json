@@ -1,0 +1,14 @@
+{
+  "name": "strategic-crisis-simulation",
+  "version": "1.0.0",
+  "description": "Geopolitical crisis management simulation with AI-powered advisors",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "express": "^4.21.0"
+  }
+}
