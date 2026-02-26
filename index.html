@@ -16,8 +16,8 @@
     <div class="container">
         <div class="header">
             <h1>STRATEGIC CRISIS SIMULATION</h1>
-            <div class="classified">CLASSIFIED - EYES ONLY - ADVISOR CLEARANCE REQUIRED</div>
-            <div style="margin-top: 10px; font-size: 12px;" id="current-time"></div>
+            <div class="classified">CLASSIFIED — EYES ONLY — ADVISOR CLEARANCE REQUIRED</div>
+            <div id="current-time"></div>
         </div>
 
         <!-- Metrics Ribbon -->
@@ -59,10 +59,10 @@
 
         <!-- Tab Navigation -->
         <div class="tab-navigation">
-            <button class="tab-btn active" data-tab="situation">SITUATION</button>
-            <button class="tab-btn" data-tab="map">MAP</button>
-            <button class="tab-btn" data-tab="advisors">ADVISORS</button>
-            <button class="tab-btn" data-tab="intel">INTEL FEED</button>
+            <button class="tab-btn active" data-tab="situation" data-fkey="⌘1"><span class="tab-label">SITUATION</span></button>
+            <button class="tab-btn" data-tab="map" data-fkey="⌘2"><span class="tab-label">MAP</span></button>
+            <button class="tab-btn" data-tab="advisors" data-fkey="⌘3"><span class="tab-label">ADVISORS</span></button>
+            <button class="tab-btn" data-tab="intel" data-fkey="⌘4"><span class="tab-label">INTEL FEED</span></button>
         </div>
 
         <!-- Situation Tab -->
@@ -189,6 +189,20 @@ Examples:
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+        <!-- Bloomberg Status Bar -->
+        <div class="bloomberg-statusbar">
+            <div class="statusbar-fkey"><span class="fkey-num">⌘1</span><span class="fkey-label">SITUATION</span></div>
+            <div class="statusbar-fkey"><span class="fkey-num">⌘2</span><span class="fkey-label">MAP</span></div>
+            <div class="statusbar-fkey"><span class="fkey-num">⌘3</span><span class="fkey-label">ADVISORS</span></div>
+            <div class="statusbar-fkey"><span class="fkey-num">⌘4</span><span class="fkey-label">INTEL</span></div>
+            <div class="statusbar-right">
+                <span>NSC SECURE TERMINAL</span>
+                <span class="statusbar-sep">|</span>
+                <span>EYES ONLY</span>
+                <span class="statusbar-sep">|</span>
+                <span>SCS v1.0</span>
             </div>
         </div>
     </div>
