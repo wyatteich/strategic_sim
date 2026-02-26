@@ -9,12 +9,21 @@ export function escapeHTML(str) {
 }
 
 // Tab system
+const TAB_KEYS = { '1': 'situation', '2': 'map', '3': 'advisors', '4': 'intel' };
+
 export function initTabs() {
     document.querySelectorAll('.tab-btn').forEach(btn => {
         btn.addEventListener('click', () => {
             const tabId = btn.dataset.tab;
             switchTab(tabId);
         });
+    });
+
+    document.addEventListener('keydown', e => {
+        if (e.metaKey && TAB_KEYS[e.key]) {
+            e.preventDefault();
+            switchTab(TAB_KEYS[e.key]);
+        }
     });
 }
 
